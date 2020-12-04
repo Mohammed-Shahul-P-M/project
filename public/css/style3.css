@@ -1,0 +1,13 @@
+body{
+    font-family: sans-serif;
+    background-color: #f0f3f2;
+}
+.navbar{
+    background-color: #581714;
+}
+.navbar-nav{
+    margin-left: auto;
+}
+.collapse > ul >li{
+    margin:0 30px;
+}

@@ -1,0 +1,94 @@
+<style>
+    body {
+        width: 100vw;
+        font-family: 'Courier New', Courier, monospace;
+    }
+
+    .login p,
+    .login input {
+        display: block;
+        text-align: center;
+        margin: 10px auto;
+        width: 80%;
+        padding: 10px 0;
+        margin: 20px auto;
+
+    }
+
+    .login input {
+        font-size: 0.8rem;
+        border: 1px solid rgb(167, 164, 164);
+        border-radius: 4px;
+    }
+
+    .login input[type='submit'] {
+        background-color: rgb(25, 176, 11);
+        color: white;
+        margin: 30px auto;
+
+    }
+
+    .login {
+
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+        align-items: center;
+        border: 1px solid rgb(167, 164, 164);
+        border-radius: 4px;
+        margin: 40px auto;
+
+    }
+
+    input:focus {
+        outline: rgb(25, 176, 11);
+    }
+
+    .heading {
+        color: rgb(25, 176, 11);
+        font-size: 1.8rem;
+        font-weight: 550;
+    }
+
+    .error {
+        width: 80%;
+        max-width: 400px;
+        background-color: rgb(247, 112, 112);
+        color: white;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        margin: 10px auto 20px;
+    }
+</style>
+{{#if signup}}
+{{!-- ------------------ section for signup ------------- --}}
+{{!-- ----------------------sign up ----------------------------  --}}
+<div id="sign-up" class="login">
+    <form action="{{route}}" method="post">
+        <p class="heading">Big Mart</p>
+        <input type="email" name="email" placeholder=" email">
+        <input type="password" name="password" placeholder=" password">
+        <input type="submit" value="Log in">
+    </form>
+    {{#if loginroute}} <p>Already have an account <a href="">login</a></p>
+    {{/if}}
+</div>
+{{else}}
+{{#if errmsg}}
+<div class="error">
+    {{errmsg}}
+</div>
+{{/if}}
+{{!--  -------------------------------login-----------------------  --}}
+<div id="login" class="login">
+    <form action="{{route}}" method="post">
+        <p class="heading">Big Mart</p>
+        <input type="text" name="name" placeholder="username or email">
+        <input type="password" name="password" placeholder=" password">
+        <input type="submit" value="Log in">
+    </form>
+    {{#if signuproute}} <p>don't have an account <a href="">signup</a></p>
+    {{/if}}
+</div>
+{{/if}}

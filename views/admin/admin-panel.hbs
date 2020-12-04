@@ -1,0 +1,148 @@
+<div id="snackbar">Some text some message..</div>
+
+{{!-- ---------------------------- left side links-------------------------------- --}}
+<p class="left-link"><i style="color: rgb(20, 20, 250);" class="fas fa-bars"></i>
+    <i>Dashboard Kit</i></p>
+<p onclick="showDiv('dealer-details');refreshHome();" class="left-link"><i class="fas fa-users"></i> Dealers</p>
+<p onclick="showDiv('settings')" class="left-link"><i class="fas fa-cog"></i> Settings</p>
+<p class="left-link"> <a style="color: white;text-decoration: none;" href="/admin/logout"><i
+            class="fas fa-sign-out-alt"></i> logout</a>
+    {{!-- -----------------------------home page display dealer details---------------------------------------- --}}
+<div class="dealers-overview">
+
+    <div class="float-left">
+        <p class="topic">Total</p>
+        <p class="count total">{{totalDealers}}</p>
+    </div>
+    <div class="float-left">
+        <p class="topic">Open</p>
+        <p class="count open">{{opendealers}}</p>
+    </div>
+    <div class="float-left">
+        <p class="topic">Close</p>
+        <p class="count close">{{closeddealers}}</p>
+    </div>
+    <div class="float-left">
+        <button onclick="showDiv('add-dealer')">Add Dealer</button>
+    </div>
+
+</div>
+
+{{!-- ----------------- daeler details------------------- --}}
+<div id="dealers-deatails" class="dealers-deatails">
+    <div id="dealer-details">
+        <p class="heading">All Dealers</p>
+        <div class="table-title">
+            <p class="address">Address</p>
+            <p class="dealer-name">Dealer Name</p>
+            <p class="status">status</p>
+            <p class="action">Actions</p>
+
+        </div>
+
+        {{#if open}}
+        {{#each open}}
+        <div id="{{this._id}}" class="dealer-info">
+            <p class="address"><strong>{{this.store}}</strong><br>{{this.location}} </p>
+            <p class="dealer-name">{{this.name}}<br>{{this.phone}} </p>
+            <p class="status">open</p>
+            <p class="action">
+                <i onclick="editDealer('{{this._id}}');showDiv('edit-dealer')" class="icon fas fa-user-edit"></i>
+                <i onclick="deleteDealer('{{this._id}}','{{this.name}}','open')" class="icon fas fa-trash-alt"></i>
+                <i onclick="statuschange('ban','{{this._id}}')" class="icon fas fa-ban"></i>
+            </p>
+            <hr>
+        </div>
+        {{/each}}
+        <hr>
+        {{/if}}
+        {{#if close}}
+        {{#each close}}
+        <div id="{{this._id}}" class="dealer-info">
+            <p class="address"><strong>{{this.store}}</strong><br>{{this.location}} </p>
+            <p class="dealer-name">{{this.name}}<br>{{this.phone}} </p>
+            <p class="status">closed</p>
+            <p class="action">
+                <i onclick="editDealer('{{this._id}}');showDiv('edit-dealer')" class="icon fas fa-user-edit"></i>
+                <i onclick="deleteDealer('{{this._id}}','{{this.name}}','close')" class="icon fas fa-trash-alt"></i>
+                <i onclick="statuschange('ban','{{this._id}}')" class="icon fas fa-ban"></i>
+            </p>
+            <hr>
+        </div>
+        {{/each}}
+        <hr>
+        {{/if}}
+    </div>
+    {{!-- ------------------------------Dealer Add form--------------------------- --}}
+    <div id="add-dealer" class="add-dealer ">
+        <form id="add-dealer-form" class="add-dealer-form" action="" method="post">
+            <p class="heading">Add new dealer</p>
+            <input type="text" name="name" placeholder="Dealer name">
+            <input type="email" name="email" placeholder="email">
+            <input type="text" name="store" placeholder="store name">
+            <input type="text" name="location" placeholder="location">
+            <input type="tel" name="phone" placeholder="phone">
+            <textarea name="address" placeholder="address" id="" cols="30" rows="2"></textarea>
+            <button type="submit">Create</button>
+        </form>
+    </div>
+    {{!-- --------------------------- --}}
+    {{!-- ------------------------------Dealer edit form--------------------------- --}}
+    <div id="edit-dealer" class="add-dealer ">
+        <p class="heading">Edit dealer</p>
+        <form id="edit-dealer-form" class="add-dealer-form" action="" method="post">
+            <input id="edit-form-0" type="text" name="name" placeholder="Dealer name">
+            <input id="edit-form-1" type="email" name="email" placeholder="email">
+            <input id="edit-form-2" type="text" name="store" placeholder="store name">
+            <input id="edit-form-3" type="text" name="location" placeholder="location">
+            <input id="edit-form-4" type="tel" name="phone" placeholder="phone">
+            <input id="edit-form-5" type="hidden" name="id">
+            <textarea id="edit-form-6" name="address" placeholder="address" id="" cols="30" rows="2"></textarea>
+            <button type="submit">edit</button>
+        </form>
+    </div>
+    {{!-- --------------------------- --}}
+    {{!-- ------------------------------Settings----------------------- --}}
+    <!-- Rounded switch  button for disable or enable app -->
+    <div id="settings" class="settings">
+        <p class="heading"> Settings </p>
+        <div class="disable-button">
+            {{#if appStatus}}
+            <p style="color: grey;">uncheck the button to disable the app</p>
+            <label class="switch">
+                <input onclick="disableApp('yes')" type="checkbox" checked>
+                <span class="slider round"></span>
+            </label>
+            {{else}}
+            <p style="color: red;">App is currently disabled please check the button to enable</p>
+            <label class="switch">
+                <input onclick="disableApp('no')" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            {{/if}}
+        </div>
+        {{!-- -------------------Edit form for admin details--------------------- --}}
+        <form action="" id='edit-admin' class="edit-admin">
+            <p class="heading">Edit admin details</p>
+            <input type="text" name="name" placeholder="new username">
+            <input type="password" name="password" placeholder="new password">
+            <button type="submit">Edit</button>
+        </form>
+        {{!-- ------------------------- banned dealers section------------------------------ --}}
+        <p style="margin: 70px 0 0 0 ;" class="headings"><i class="fas fa-user-slash"></i> Banned dealers</p>
+        {{#each banned}}
+        <div id="{{this._id}}" class="dealer-info">
+            <p class="address"><strong>{{this.store}}</strong><br>{{this.location}}</p>
+            <p class="dealer-name">{{this.name}}<br>{{this.phone}} </p>
+            <p class="action">
+                <i onclick="editDealer('{{this._id}}');showDiv('edit-dealer')" class="icon fas fa-user-edit"></i>
+                <i onclick="deleteDealer('{{this._id}}','{{this.name}}')" class="icon fas fa-trash-alt"></i>
+                <i onclick="statuschange('unban','{{this._id}}')" style="color: rgb(8, 182, 8);"
+                    class="icon fas fa-check-double"></i>
+            </p>
+            <hr>
+        </div>
+        {{/each}}
+
+    </div>
+</div>

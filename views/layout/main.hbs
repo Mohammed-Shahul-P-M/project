@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <link rel="stylesheet" href="/css/main.css">
+    {{#if user}}
+    <link rel="stylesheet" href="/css/style3.css">
+    {{else if dealer}}
+    <link rel="stylesheet" href="/css/style2.css">
+    {{else if admin}}
+    <link rel="stylesheet" href="/css/style.css">
+
+    {{/if}}
+    <script src="https://kit.fontawesome.com/99f563362d.js" crossorigin="anonymous"></script>
+    <title>Big Mart</title>
+</head>
+
+<body>
+
+    {{#if user}}
+    {{>user-header}}
+    {{else if dealer}}
+    {{>dealer-header}}
+    {{/if}}
+    {{{body}}}
+
+    <!-- Optional JavaScript -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    {{#if user}}
+    <script src="/js/userScript.js"></script>
+    {{else if dealer}}
+    <script src="/js/dealerScript.js"></script>
+    {{else if admin}}
+    <script src="/js/adminScript.js"></script>
+    {{/if}}
+</body>
+
+</html>

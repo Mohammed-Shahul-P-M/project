@@ -1,0 +1,48 @@
+name of the project :  grocery delivery system
+start date          : 22-11-2020
+author              : mohammed shahul p m 
+
+                First commit 
+----------------------------------------------
+coded straigt until 26-11-2020 without initial committing 
+oh damn 26 - 4th dec redesigning the web page and changing all stuf related to it , ans converted to single page app
+
+finished module admin for the app 
+---------------------------------
+
+login hbs -> can be used any route and must provide a route for post the login data when rendering
+
+app.js    -> main file to start the app and command is -> " node app.js "
+
+admin.js ->  file for all admin related route 
+
+admindbfunction.js -> file for all database function for admin
+
+routes
+----------
+no
+--
+23  get : /   -> checking authentication -> if auth  curresponding route could be anyroute
+                                           -> else  rendering login page with route err message
+29  post : /  ->  posted login credentials checking -> if admin exist rendering admin panel 
+                                                      -> else rendering login page with err msg
+48 post  : /update -> route for update admin password and username
+
+61 get  : /logout  -> route to log out for admin 
+
+66 post : /desable -> route for desable whole app
+
+78 get : /admin-panel -> admin dash board after logined
+
+82 post : /createDealer -> for creating a new dealer req coming by ajax
+
+91 post : /editDealer -> for editing the deatails of existing dealer req coming by ajax from dealer info
+
+107 get : /getDealers  -> for listing all the dealer and rendering the 'dealer-info'
+
+115 get : /getdealers/dealer/:dealerId  -> for the detils of a specific dealer and rendering 'dealer-info'
+
+125 post : /dealerstatus -> for activate/ban the dealer req coming by ajax
+
+135 get : /deleteDealer/:id -> for deleting a specific dealer 
+

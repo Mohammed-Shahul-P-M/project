@@ -1,0 +1,61 @@
+{{!-- Side bar menu --}}
+<style>
+    .sticky-top {
+        position: fixed;
+        width: 100%;
+        height: 80px
+    }
+
+    .side-bar {
+        margin-top: 80px;
+        width: 25%;
+        height: 100%;
+        margin-left: 0;
+        background: #581714;
+        position: fixed;
+        color: white;
+    }
+
+    .non-sidebar {
+        margin-top: 80px;
+        width: 75%;
+        float: right;
+    }
+
+    .side-bar-icons {
+        width: 20%;
+        float: left;
+    }
+
+    .side-bar-links {
+        width: 80%;
+        float: left;
+    }
+
+    .side-bar>div>p {
+        margin: 30px;
+    }
+</style>
+<div class="side-bar">
+    <div class="side-bar-icons">
+        <p><i class="fas fa-bars"></i></p>
+        <p><i class="fas fa-cloud-meatball"></i></p>
+        <p><i class="fas fa-truck"></i></p>
+        <p><i class="fas fa-rupee-sign"></i></p>
+        <p><i class="fas fa-chart-line"></i></p>
+        <p><i class="fas fa-cogs"></i></p>
+    </div>
+    <div class="side-bar-links">
+        <p>Dashboard</p>
+        <p>Products</p>
+        <p>Orders</p>
+        <p>Financials</p>
+        <p>Analysis</p>
+        <p>Settings</p>
+    </div>
+</div>
+{{!-- rest of body  --}}
+<div id="dashboard" class="dashboard non-sidebar">
+    <h4>Welcome Mr dealer</h4>
+    <hr style="background: black;border: 2px solid;">
+</div>

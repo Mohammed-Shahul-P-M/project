@@ -1,0 +1,245 @@
+body{
+    background-color: #222831;
+    color: white;
+    margin: 20px 10px;
+    font-style: italic;
+    padding-bottom: 50px;
+   font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif ;
+}
+/* ------------- display settings for specific div */
+#dealer-details{
+    display: block;
+} 
+#add-dealer,#settings,#edit-dealer{
+    display: none;
+}
+
+/* ------------------------------- */
+.dealers-overview{
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    width: 80%;
+}
+.dealers-overview div.float-left{
+    width: 20%;
+    float: left;
+    background-color: white;
+    color: #222831;
+    text-align: center;
+    margin: 0 20px;
+    border-radius: 4px;
+    font-style: italic;
+    height: 110px;
+}
+.dealers-overview div.float-left p.topic{
+    color: grey;
+}
+.dealers-overview div.float-left p.count{
+    font-size: 1.5rem;
+}
+.dealers-overview div.float-left:nth-child(4){
+    background-color: #222831;    
+}
+.dealers-overview div.float-left:nth-child(4) button{
+border: none;
+outline: none;
+border-radius: 4px;
+background-color: blue;
+padding: 5px 20px;
+margin: 35px auto;
+color: white;
+}
+.dealers-deatails{
+    background-color: white;
+    float: right;
+    padding: 10px    0 0 25px  ;
+    margin: 130px 20px 50px 20px;
+    background-color: white;
+    width: 75%;
+    border-radius: 4px;
+    color: rgb(24, 23, 23);
+    margin-bottom: 50px;
+}
+.dealers-deatails p.heading{
+    font-size: 1.3rem;
+    font-style: italic;
+    
+}
+
+.table-title{
+    height: 40px;
+    color: gray;
+    font-weight: 550;
+}
+.dealer-info{
+    height: 100px;
+}
+.table-title p, .dealer-info p{
+position: absolute;
+}
+
+p.address{
+  margin-left: 10px;
+  width: 250px;
+}
+p.dealer-name{
+margin-left: 250px;
+}
+p.status{
+    margin-left: 500px;
+}
+p.action{
+margin-left: 650px;
+}
+p.action .icon{
+    margin-right:20px ;
+}
+p.action .icon:nth-child(1){
+color: rgb(10, 177, 10);}
+
+p.action .icon:nth-child(2){
+    color: red;}
+
+p.action .icon:nth-child(3){
+    color: orange;}
+.dealer-info p{
+    margin-top: 40px;
+}
+.dealer-info{
+
+padding-top: 20px;
+}
+
+/* ---------------------------------- 
+-----------------css for dealer form-------------------*/
+.add-dealer form{
+    width: 60%;
+    margin-left: 60px;
+    margin-bottom: 60px;
+}
+.add-dealer-form input,.add-dealer-form textarea,.edit-admin input{
+  width: 100%;
+  padding: 10px 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  margin-top: 10px;
+  border-bottom: 2px solid gray;
+}
+.add-dealer form button ,.edit-admin button{
+    background-color: rgb(25, 128, 253);
+    padding: 10px 30px;
+    border-radius: 4px;
+    border: none;
+    font-size: 1rem;
+    margin-left: auto;
+    color: white;
+    position: relative;
+    right: -350px;
+    top: 30px;
+}
+
+/* css for settings section */
+.settings{
+    min-height: 300px;
+    font-family: 'Courier New', Courier, monospace;   
+}
+.edit-admin{
+    width: 30%;
+    position: absolute;
+    top: 160px;
+    left: 65%;
+}
+
+.edit-admin button{
+    margin-left: -40%;
+}
+/* ************css for togele switch to disable or enable the app ******** */
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  /* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  /* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+  }
+  .slider.round:before {
+    border-radius: 50%;
+  }  
+/* *********************************************** */
+.settings p.heading{
+    font-style: normal;
+    font-size: medium;
+}
+.disable-button{
+    text-align: center;
+    border-radius: 2px;
+    border: 2px solid gray;
+    width: 40%;
+    padding-bottom: 20px;
+    margin-left: 5%;
+}
+/* ---------------  css for left side links ------------ */
+p.left-link{
+    position: fixed;
+    left: 20px;
+    cursor: pointer;
+}
+p.left-link:nth-child(2){
+    top: 10px;
+}
+p.left-link:nth-child(3){
+    top: 90px;
+}
+p.left-link:nth-child(4){
+    top: 190px;
+}
+p.left-link:nth-child(5){
+    top: 290px;
+}

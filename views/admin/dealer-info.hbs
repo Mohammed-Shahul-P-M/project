@@ -1,0 +1,128 @@
+{{!-- This file is for showing detiails of a specific dealer 
+                 1 . pen icon on the page it show edit,ban,delete dealer function button
+                     when clicked on it 
+                 2.  pop up box for confirmation message 
+                 3 . dealer details and status 
+                 4 . edit dealer deatails 
+ --}}
+{{!-- ---------------div for show update when a change occured through ajax  --}}
+<div id="snackbar">Some text some message..</div>
+{{!-- ------------------ --}}
+{{!-- -------------------1- PEN icon  and a function (showFunction()) at adminScript.js  in 25 th line--}}
+<div onclick="showFunction()" class="edit"><i style="font-size: 45px;color: rgb(221, 206, 211);"
+        class="mt-2 fas fa-pen-nib"></i></div>
+<section>
+    {{!-- --------Buttons for edit , ban/activate , delete dealer 
+            FUNCTIONS   :   showFunctions() to hide all button after clicked any of this 
+                            showpopup(value) to show pop up confirm box before baning dealer 
+                                  at line 27,31,35  in this file at adminScript.js line 84
+                            showpopup()
+ --}}
+    <div class="functionButton" id="functionButton">
+        <div class="edit-function">
+            <div class="row">
+                <a href="#edit-dealer" onclick="showFunction()" class="btn-snack btn btn-primary"><i
+                        class="mr-2 ml-2 fas fa-pencil-alt"></i>Editdealer</a>
+                {{#if dealerdata.status}}
+                <button onclick="showFunction();showpopup('ban') " class="btn-snack btn btn-warning"><i
+                        class="mr-2 fas fa-ban"></i>Deactivate
+                    dealer</button>
+                {{else}}
+                <button onclick="showFunction();showpopup('activate') " class="btn-snack btn btn-success"><i
+                        class="mr-2 fas fa-check"></i>Activate
+                    dealer</button>
+                {{/if}}
+                <button onclick="showFunction();showpopup('delete')" class="btn-snack btn btn-danger"><i
+                        class="mr-2 ml-2 fas fa-trash-alt"></i>Delete
+                    dealer</button>
+
+            </div>
+        </div>
+    </div>
+    {{!-- ----------------------------------------------------------------------------------------------------- --}}
+    {{!-- ----------------------- 2 . POP - UP - BOX - sections ----------------------------
+                 FUNCTIONS     : closepopup() to close pop up 
+                                            at line 53,60,66 in this file at line 90 in adminScript.js
+                                 statuschange() to ban/activate dealer 
+                                           at line 54,67 in this file at line 100 in adminScript.js
+
+    ---}}
+    {{!--  code for confirm popup box activate dealer --}}
+    <div id="pop-up-activate" class="pop-up ">
+        <h5 id="pop-up-title " class="mt-3 ml-3 mr-3">Are you sure to want activate "{{dealerdata.name}}"</h5>
+        <button onclick="closepopup('activate')" class="btn btn-pop btn-danger m-3 float-left">No</button>
+        <button onclick="statuschange('yes','{{dealerdata._id}}')"
+            class="btn mb-3 btn-pop btn-success m-3 float-right">Yes</button>
+    </div>
+    {{!--  code for confirm popup box delete dealer --}}
+    <div id="pop-up-delete" class="pop-up ">
+        <h5 id="pop-up-title " class="mt-3 ml-3 mr-3">Are you sure to want delete "{{dealerdata.name}}"</h5>
+        <button onclick="closepopup('delete')" class="btn btn-pop btn-info m-3 float-left">No</button>
+        <a href="/admin/deletedealer/{{dealerdata._id}}" class="btn mb-3 btn-pop btn-danger m-3 float-right">Yes</a>
+    </div>
+    {{!--  pop up confirmation for deactivate dealer function --}}
+    <div id="pop-up-ban" class="pop-up ">
+        <h5 id="pop-up-title " class="mt-3 ml-3 mr-3">Are you sure to want deactivate "{{dealerdata.name}}"</h5>
+        <button onclick="closepopup('ban')" class="btn btn-pop btn-info m-3 float-left">No</button>
+        <button onclick="statuschange('no','{{dealerdata._id}}')"
+            class="btn mb-3 btn-pop btn-danger m-3 float-right">Yes</button>
+    </div>
+    {{!-- ----------------------------------------------------------------------------------------------------- --}}
+    {{!-- ------------------------3. Dealer Deatails Section-----------------------------------
+               
+  --}}
+    <div class="row mt-5">
+
+        <div class="details col-10 col-md-5 p-4 m-auto">
+            <i style="font-size: 80px; color: rgb(248, 179, 133);" class="fas fa-user-edit"></i>
+            <h2 id="1" class="m-4"> {{dealerdata.name}}</h2>
+            {{#if dealerdata.status}}
+            <button class="btn btn-success float-left">A c t i v e</button>
+            <div class="float-right" onclick="showpopup('ban')"
+                style="border:2px solid rgb(255, 54, 47);cursor: pointer; border-radius: 4px;">
+                <span class="ml-2">Ban now</span> <button class="btn btn-danger  ml-2"> <i
+                        class="fas fa-ban"></i></button>
+            </div>
+            {{else}}
+            <button class="btn btn-danger float-left">D e a c t i v e</button>
+            <div class="float-right" onclick="showpopup('activate')"
+                style="border:2px solid rgb(50, 255, 47);cursor: pointer; border-radius: 4px;">
+                <span class="ml-2">Activate</span> <button class="btn btn-success  ml-2"> <i
+                        class="fas fa-check"></i></button>
+            </div>
+            {{/if}}
+        </div>
+        <div class="details col-10 col-md-5 p-4 m-auto">
+            <h4>Deatails</h4>
+            <h6 id="2">{{dealerdata.email}}</h6>
+            <h6 id="3">{{dealerdata.store}}</h6>
+            <h6 id="4">{{dealerdata.location}}</h6>
+            <h6 id="5">{{dealerdata.phone}}</h6>
+            <h6 id="6">{{dealerdata.address}}</h6>
+        </div>
+
+    </div>
+    {{!-- ----------------------------------------------------------------------------------------------- --}}
+    {{!-- --------------------------------------4.Edit Dealer Section------------------------
+        function to edit dealer through ajax at line 36 in adminScript.js  
+ --}}
+    <div class="row">
+        <div class="col-10 col-md-5">
+            <form id="form-edit-dealer" action="" method="post">
+                <h4 id="edit-dealer" class="m-4">Edit Details</h4>
+                <input class="form-control mt-2" type="text" name="name" value="{{dealerdata.name}}">
+                <input class="form-control mt-2" type="text" name="email" value="{{dealerdata.email}}">
+                <input class="form-control mt-2" type="text" name="store" value="{{dealerdata.store}}">
+                <input class="form-control mt-2" type="text" name="location" value="{{dealerdata.location}}">
+                <input class="form-control mt-2" type="text" name="phone" value="{{dealerdata.phone}}">
+                <textarea class="form-control mt-2" type="text" name="address">{{dealerdata.address}}</textarea>
+                <input type="hidden" name="id" value="{{dealerdata._id}}">
+                <input type="submit" class="btn-snack btn btn-success  mt-3">
+            </form>
+        </div>
+        <div class="col-10 col-md-5">
+            <button class="m-auto btn btn-success">some upcoming stuff</button>
+        </div>
+    </div>
+    {{!-- --------------------------------------------------------------------------------------------- --}}
+</section>
