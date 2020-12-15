@@ -2,6 +2,8 @@
     body {
         width: 100vw;
         font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+        padding: 0;
     }
 
     .login p,
@@ -45,8 +47,8 @@
     }
 
     .heading {
-        color: rgb(25, 176, 11);
-        font-size: 1.8rem;
+
+        font-size: 1.2rem;
         font-weight: 550;
     }
 
@@ -60,13 +62,30 @@
         text-align: center;
         margin: 10px auto 20px;
     }
+
+    nav {
+        background-color: rgb(218, 214, 218);
+        height: 2.6rem;
+        font-size: 1.7rem;
+        padding: 6px;
+        padding-top: 15px;
+        padding-bottom: 10px;
+    }
+
+    nav span {
+        font-weight: 600;
+        color: rgb(25, 176, 11);
+    }
 </style>
+<nav>
+    <span>Big Mart</span>
+</nav>
 {{#if signup}}
 {{!-- ------------------ section for signup ------------- --}}
 {{!-- ----------------------sign up ----------------------------  --}}
 <div id="sign-up" class="login">
     <form action="{{route}}" method="post">
-        <p class="heading">Big Mart</p>
+        <p class="heading">{{formHeading}}</p>
         <input type="email" name="email" placeholder=" email">
         <input type="password" name="password" placeholder=" password">
         <input type="submit" value="Log in">
@@ -83,8 +102,9 @@
 {{!--  -------------------------------login-----------------------  --}}
 <div id="login" class="login">
     <form action="{{route}}" method="post">
-        <p class="heading">Big Mart</p>
-        <input type="text" name="name" placeholder="username or email">
+        <p class="heading">{{formHeading}}</p>
+        <input type="text" {{#if Admin}} name="name" placeholder="username or email" {{else }} name="email"
+            placeholder="email" {{/if}}>
         <input type="password" name="password" placeholder=" password">
         <input type="submit" value="Log in">
     </form>

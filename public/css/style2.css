@@ -1,13 +1,762 @@
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@1,200&display=swap');
 body{
+    padding: 0;
+    margin: 0;
     font-family: sans-serif;
-    background-color: #f0f3f2;
+    background-color: rgb(241, 239, 239);
 }
-.navbar{
-    background-color: #581714;
+/*     deafault hiding divs */
+#order-details{
+    visibility: hidden;
 }
-.navbar-nav{
-    margin-left: auto;
+
+
+/*  style for left side of page where all links displayed of each section */
+.left-side{
+    background-color: #222831;
+    width: 20%;
+    height: 100%;
+    position: fixed;
+    color: rgb(187, 185, 185);
+    top: 0;
 }
-.collapse > ul >li{
-    margin:0 30px;
+.left-side p  {
+    margin-top: 20px ;
+    padding: 5px;
+    padding-left: 20px;
+    font-size: 0.8rem;
+}
+.left-side p:not(.store):hover{
+    background-color: #171e29;
+    color: rgb(225, 221, 221);
+    cursor: pointer;
+}
+.left-side p.store{
+    padding-left: 0;
+    color: rgb(235, 232, 232);
+    margin-top: 15px ;
+    margin-bottom: 50px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+.left-side p.active{
+    background-color: #171e29;
+    color: rgb(225, 221, 221);
+    cursor: pointer;
+}
+/* ************************************************************ */
+/* ********  css for right side  */
+.right-side{
+    width: 80%;
+    margin-left: 20%;
+}
+.tab{
+    width: 100%;
+    padding-top: 90px;
+    display: none;
+}
+.tab p.heading{
+    background-color: rgb(241, 239, 239);
+    font-weight: 550;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
+    padding: 20px ;
+    top: -5%;
+    border-bottom:1px solid grey;
+}
+/* *****  defualt   css for order section *********** */
+.orders-tab{ display: block;}
+.orders-tab .orders,.history,.user-tab .user,
+.products-tab .products
+{
+    background-color: rgb(231, 200, 200);
+    width: 95%;
+    margin-left: 2.5%;
+    min-height: 500px;
+    border-radius: 4px;
+    border: 1px solid rgb(165, 163, 163);
+    cursor: pointer;
+}
+/* ********** code for each order  */
+.orders-tab .orders .order,.history .order,
+.products-tab .products .product
+{
+    position: relative;
+    width: 90%;
+    border-radius: 4px;
+    margin: 2%;
+    background-color: rgb(235, 232, 232);
+    height: 130px;
+}
+.orders-tab .orders .order>div,.history .order > div{
+position: absolute;
+font-size: 0.8rem;
+}
+.orders-tab .orders .order>div.user,
+.ordershistory-tab .history .order>div.user
+{
+top: 40px;
+font-size: 1.2rem;
+left: 30px;
+}
+.orders-tab .orders .order>div.address,
+.ordershistory-tab .history .order>div.address
+{
+top: 80px;
+left: 30px;
+font-size: 0.7rem;
+width: 300px;
+font-family: 'JetBrains Mono', monospace;
+}
+.orders-tab .orders .order>div.time,
+.ordershistory-tab .history .order>div.time{
+top: 12px;
+border-radius: 4px;
+left: 150px;
+font-size: 0.7rem;
+font-weight: 300;
+background-color: rgb(175, 199, 247);
+padding: 3px 5px;
+}
+.orders-tab .orders .order>div.status,
+.ordershistory-tab .history .order>div.feedback{
+top: 15px;
+left: 300px;
+}
+.orders-tab .orders .order>div.view,
+.ordershistory-tab .history .order>div.view{
+top: 15px;
+font-size: 0.7rem;
+font-weight: 500;
+background-color: rgb(175, 199, 247);
+padding: 3px 5px;
+left: 550px;
+border-radius: 3px;
+}
+.orders-tab .orders .order>div.total,
+.ordershistory-tab .history .order>div.total{
+top: 40px;
+left: 500px;
+font-family: 'Courier New', Courier, monospace;
+}.orders-tab .orders .order>div.total p.cost,
+.ordershistory-tab .history .order>div.total p.cost{
+font-size: 0.9rem;
+font-weight: 550;
+}.orders-tab .orders .order>div.total p.cost span,
+.ordershistory-tab .history .order>div.total p.cost span{
+font-weight: 650;
+font-size: 1rem;
+margin-left: 40px;
+}.orders-tab .orders .order>div.total p.item,
+.ordershistory-tab .history .order>div.total p.item{
+font-size: 0.8rem;
+font-weight: 550;
+}.orders-tab .orders .order>div.total p.item span,
+.ordershistory-tab .history .order>div.total p.item span{
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-left: 60px;
+}.orders-tab .orders .order>div.status select,
+.ordershistory-tab .history .order>div.status select{
+    border-radius: 3px;
+padding: 2px;
+border:2px solid gray;
+outline: gray;
+}.orders-tab .orders .order>div.status select option,
+.ordershistory-tab .history .order>div.status select option{
+border: 2px solid gray;
+ background-color: rgb(213, 208, 208);
+ border-radius: 3px;
+}.orders-tab .orders .order>div.status button,
+.ordershistory-tab .history .order>div.status button{
+border-radius: 3px ;
+background-color: rgb(0, 76, 255);
+color: white;
+outline: none;
+border: none;
+padding: 5px 8px;
+}
+/* ********************************************** */
+/* _______css for user section __________ */
+
+.user-tab .user .each-user{
+    position: relative;
+    border-bottom: 2px solid white;
+    min-height: 70px;
+}
+.user-tab .user .each-user > *{
+position: absolute;
+top: 5px;
+font-size: 0.8rem;
+font-style: italic;
+
+}
+.user-tab .user .each-user p.name{
+left: 20px;
+font-family: 'Courier New', Courier, monospace;
+width: 200px;
+}
+.user-tab .user .each-user p.address{
+    left: 250px;
+    width: 270px;
+    font-family: 'Courier New', Courier, monospace;
+}
+.user-tab .user .each-user p.no-of-orders{
+    left: 580px;
+    color: black;
+    font-family: 'Courier New', Courier, monospace;
+}
+.user-tab .user .each-user i{
+    font-style: normal;
+    color: red;
+    left: 750px;
+    top: 20px;
+    font-size: 1.5rem;
+    
+}
+.user-tab .headings{
+    position: fixed;
+    top: 50px;
+    height: 30px;
+    width: 100%;
+    font-style: italic;
+    font-size: 0.7rem;
+    color: rgb(57, 53, 53);
+    font-weight: 550;
+    background-color: rgb(203, 236, 250);
+    z-index: 1;
+    padding-top: 0;
+}
+.user-tab .headings>*{
+    position: absolute;
+    top: -5px;
+}
+.user-tab .headings p.name{
+left:60px ;
+}
+.user-tab .headings p.address{
+    left: 290px;
+}
+.user-tab .headings p.no-of-orders{
+    left: 580px;
+}
+.user-tab .headings p.action{
+    left: 730px;
+}
+/* _________________________________________________ */
+.products-tab{
+    position: relative;
+}
+/*   css for products section */
+.products-tab .products .product{
+    height: 100px;
+    background-color: white;
+    width: 95%;
+}
+.products-tab .products .product>*{
+position: absolute;
+top: 30px;
+font-size: 0.8rem;
+font-family: 'Courier New', Courier, monospace;
+}
+.products-tab .products .product img{
+    width: 80px;
+    max-height: 80px;
+    top: 10px;
+    left: 10px;
+    border-radius: 6px;
+}
+.products-tab .products .product p.name{
+    left: 120px;
+}
+.products-tab .products .product p.catogory{
+    left: 250px;
+}
+.products-tab .products .product p.price{
+    left: 380px;
+}
+.products-tab .products .product p.stock{
+    left: 450px;
+}
+.products-tab .products .product p.stock span{
+font-style: italic;
+font-size: 0.7rem;
+color: gray;
+}
+.products-tab .products .product p.action{
+    left: 520px;
+}
+.products-tab .products .product p.action button{
+    padding: 3px 5px;
+    border-radius: 10px;
+    margin: -4px 3px;
+    background-color: white;
+    font-weight: 550;
+    color: white;
+    border: none;
+    outline: none;
+}
+.products-tab .products .headings{
+height: 30px;
+position: fixed;
+z-index: 1;
+top: 38px;
+width: 100%;
+margin-left: -20px;
+background-color: rgb(241, 239, 239);
+}
+.products-tab p.heading span{
+    font-weight: 500;
+    font-size: 0.8rem;
+    font-family: 'Courier New', Courier, monospace;
+    margin-left: 30px;
+    padding: 3px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    color: rgb(0, 21, 128);
+}
+span.active{
+    background-color: #6d9be6;
+    color: white;
+}
+.products-tab .products .headings>*{
+top: -5px;
+font-weight: 550;
+margin-left: 30px;
+}
+
+/*  css for product add form */
+.products-tab form{
+    background-color: rgb(241, 244, 245);
+    width: 30%;
+    padding:0 10px 20px;
+    border: 1px solid black;
+    margin: 40px;
+    text-align: center;
+    float: left;
+    min-height: 200px;
+    margin-left: 10%;
+    border-radius: 4px;
+}
+.products-tab form>select, input{
+    width:80%;
+    background-color: inherit;
+    outline: none;
+    padding: 3px;
+    border-radius: 4px;
+    border: 1px solid grey;
+    margin-top: 10px;
+}
+.products-tab form > input[type='submit']{
+    background-color: rgb(0, 136, 255);
+    color: white;
+    outline: none;
+    border-radius: 4px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    width: 100px;
+    float: right;
+    margin-right: 25px;
+}
+.products-tab .sugessiondiv{
+    position: absolute;
+    width:23.5% ;
+    text-align: center;
+    background-color: white;
+    border-radius: 3px;
+    border: 1px solid gray;
+    visibility: hidden;
+    z-index: 5;
+}
+#sugessiondiv p{
+font-size: 0.9rem;
+padding: 3px 0;
+letter-spacing: 1px;
+margin: 0;
+}
+#sugessiondiv p:hover{
+background-color: #171e29;
+color: white;
+}
+    /* _____________________Css for settings section _____________ */
+.settings-tab .update-time{
+    width: 280px;
+    padding: 35px;
+    border: 2px solid #171e29;
+    margin-left: 30px;
+    border-radius: 4px;
+}
+.settings-tab .update-time span{
+    background-color: #171e29;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    border-radius: 4px;
+}
+.settings-tab .update-time input{
+width: 80px;
+margin-top: 15px;
+padding: 5px;
+border-radius: 5px;
+border: 1px solid grey;
+outline: none;
+}
+.settings-tab .update-time input[type='submit']{
+background-color: blue;
+color: white;
+}
+.settings-tab .check-box{
+    padding:20px;
+position: absolute;
+top: 92px;
+left: 65%;
+text-align: center;
+font-size: 0.9rem;
+border-radius: 4px;
+border: 1px solid #222831;
+}
+.settings-tab .check-box input[type='checkbox']{
+    padding: 5px;
+    background-color: red;
+    width: 20px;
+}
+.changePaswword{
+    font-weight: 550;
+    padding: 3px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    background-color: rgb(189, 185, 185);
+    font-style: italic;
+    color: rgb(3, 98, 130);
+    margin-left: 50%;
+    font-family: 'Courier New', Courier, monospace;
+}
+/* personal info section and edit form */
+.settings-tab .personal-info{
+    background-color: rgb(196, 193, 193);
+    padding: 5px 0;
+    margin: 20px;
+    border-radius: 5px;
+    position: relative;
+}
+.settings-tab .personal-info > img.pro-pic , button.change-pic{
+position: absolute;
+left: 80%;
+}
+.personal-info img.pro-pic{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    top: 50px;
+    border: 2px solid rgb(84, 151, 245);
+}
+.edit-dealer-info{
+    width: 90%;
+    margin-left: 5%;
+    font-size: 1rem;
+    padding-bottom: 60px;
+}
+.edit-dealer-info > input,textarea{
+    width: 30%;
+    border: none;
+    border-bottom: 1px solid gray;
+    background-color: inherit;
+    padding: 6px 0;
+    margin:0 0 10px 25px;
+    outline: none;
+}
+.edit-dealer-info textarea{
+    position: absolute;
+    margin-left: 28px;
+    width: 28%;
+}
+.edit-dealer-info > input[type='submit'],input.change-pic{
+    border-radius: 4px;
+    position: absolute;
+    margin-top: 60px;
+    margin-left: 150px;
+    border: none;
+    width: 100px;
+    background-color: rgb(6, 127, 179);
+    color: white;
+}
+.personal-info input.change-pic{
+top: 110px;
+margin-left: 0;
+padding: 5px;
+width: 90px;
+left: 80%;
+text-align: center;
+}
+.personal-info input.change-pic::-webkit-file-upload-button{
+    visibility: hidden;
+}
+.personal-info i.fas{
+    position: absolute;
+    top: 23px;
+    left: 450px;
+    color: darkred;
+    cursor: pointer;
+}
+.personal-info i.fas span{
+color: gray;
+font-size: 0.9rem;
+}
+.personal-info input.change-pic::before{
+    content: 'Change pic';
+    -webkit-user-select: none;
+}
+.inactive  input[type='submit'],.inactive input.change-pic{
+    visibility: hidden;
+    
+}
+.inactive > input ,textarea {
+    border: none;
+}
+/* _________________________________________________________ */
+/* ******* code for each order detaild info */
+.order-details{
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    min-height: 100%;
+    background-color: #0f131bd0;
+}
+.order-details .order-info{
+    width: 60%;
+    margin: 30px 20%;
+    height: 90vh;
+    background-color: rgb(235, 233, 233);
+    position: absolute;
+    z-index: 4;
+    opacity: 200%;
+    border-radius: 4px;   
+}
+.order-details .order-info div{
+position: absolute;
+}
+.order-details .order-info .order-id{
+ top: 15px;
+ left: 25px;
+ border-radius: 3px;
+ border: 2px solid grey;
+ padding: 3px;
+font-size: 0.8rem;
+}
+.order-details .order-info .ordered-items{
+    background-color: rgb(185, 198, 198);
+    width: 350px;
+    left: 20px;
+    top: 70px;
+    height: 70vh;
+    border-radius:4px ;
+    overflow-y: scroll;
+}
+.order-details .order-info .ordered-items i{
+   position: fixed;
+   left: 560px;
+   top: 40%;
+   padding-top: 0;
+   z-index: 1;
+   color: black;
+}
+.order-details .order-info .ordered-items i:nth-child(2){
+top: 70%;
+}
+::-webkit-scrollbar {
+    display: none;
+}
+.order-details .order-info .total{
+top: 200px;
+left: 65%;
+font-weight: 650;
+font-family: 'Courier New', Courier, monospace;
+color: rgb(30, 28, 28);
+border-radius: 5px;
+}
+.order-details .order-info .total-cost{
+    background-color: rgb(252, 185, 176);
+padding: 5px 10px;
+}
+.order-details .order-info .address{
+top: 60px;
+left: 65%;
+width: 200px;
+font-size: 0.8rem;
+font-family: 'JetBrains Mono', monospace;
+font-weight: 650;
+background-color: rgb(175, 202, 211);
+text-align: center;
+border-radius: 4px;
+padding: 5px;
+}
+.order-details .order-info button{
+ position: absolute;
+top: 350px;
+left: 69%;
+padding: 6px 25px;
+width: 150px;
+font-size: 1.1rem;
+color: white;
+background-color: rgb(15, 79, 5);
+border-radius: 3px;
+border: none;
+outline: none;
+}
+.order-details .order-info .ordered-items .each-item{
+    position: relative;
+    min-height: 60px;
+    margin-top: 20px;
+    border-bottom: 1px solid white;
+    border-top: 1px solid white;
+}
+.each-item img{
+    width: 50px;
+}
+.each-item > * {
+    float: left;
+    font-size: 0.7rem;
+    padding: 5px;
+    width: 16%;
+    background-color: inherit;
+}
+.order-details .order-info .ordered-items .heading{
+height: 20px;
+min-height: 0;
+border: none;
+margin: 0;
+margin-bottom: 40px;
+font-weight: 550;
+}
+.order-info i{
+    position: absolute;
+    top: 90px;
+    left: 400px;
+    font-size: 1.2rem;
+    padding-right: 10px;
+    color: rgb(5, 95, 159);
+}
+.order-info i.close{
+color: red;
+top: 15px;
+left: 615px;
+font-size: 1.5rem;
+}
+form.form input{
+border: none;
+outline: none;
+border-bottom: 1px solid gray;
+width: 60%;
+border-radius: 0;
+margin-bottom: 10px;
+margin-left: 2%;
+}
+form.form >input[type='submit'],input[type='file']{
+    border: 1px solid rgb(171, 167, 167);
+    background-color: rgb(36, 144, 252);
+    color: white;
+    border-radius: 4px;
+    width: 30%;
+    display: block;
+    margin-left: 33%;
+}
+form.form ::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+form.form input[type='file']::before{
+    content: 'change pic';
+    -webkit-user-select: none;    
+}
+form.form input[type='file']{
+    width: 80px;
+    position: absolute;
+    top: 140px;
+    left: 40%;
+}
+/* ------------------CSS for edit form----------------- */
+#edit-products ,#edit-stock{
+    position: fixed;
+    z-index: 3;
+    top: 15%;
+    background-color: white;
+    padding: 20px;
+    border: 2px solid gray;
+    border-radius: 4px;
+    box-shadow: 1px 1px 2px 2px gray;
+}
+#edit-products{
+    left: 25%;
+    min-height: 200px;
+    width: 50%;
+   
+}
+#edit-products img{
+width: 100px;
+height: 100px;
+position: absolute;
+top: 20px;
+left: 72%;
+border-radius: 50%;
+}
+#edit-products input[type='file']{
+    position: absolute;
+    left: 72%;
+}
+#edit-stock{
+   left: 35%;
+    min-width: 30%;
+}
+#update-time{
+    visibility: hidden;
+    width: 33%;
+    position: fixed;
+    z-index: 1;
+    background-color: white;
+    left: 30%;
+    top: 100px;
+    padding: 10px;
+    border-radius: 4px;
+    box-shadow: 1px 1px 2px 3px gray;
+}
+#update-time > input ,select{
+width: 15%;
+margin-right: 10px;
+}
+#update-time p:first-child{
+    color: rgb(9, 130, 252);
+    text-align: center;
+    font-weight: 550;
+}
+#update-time .topic{
+display: inline;
+font-size: 0.8rem;
+background-color: black;
+padding: 3px;
+color: white;
+border-radius: 4px;
+min-width: 200px !important;
+width: 300px;
+margin: 0 10px;
+}
+#update-time input[type='submit']{
+    width: 30%;
+    float: right;
+    margin-right: 9%;
+}
+/* css for the form to Change password */
+#edit-password{
+    position: fixed;
+    visibility: hidden;
+    text-align: center;
+    box-shadow: 1px 1px 2px 1px gray;
+    width: 400px;
+    background-color: white;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%,-60%);
 }

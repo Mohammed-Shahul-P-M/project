@@ -4,15 +4,6 @@ function checklogin(response, next) {
     else next()
 }
 
-var doesChangeOccure = false // for refreshing home page
-// function to refresh home page 
-function refreshHome() {
-    if (doesChangeOccure) {
-        doesChangeOccure = false
-        location.reload()
-    }
-
-}
 // storing all dealer data from the server for better perfomance
 let alldealers = null
 $.ajax({
@@ -60,7 +51,7 @@ $('#edit-dealer-form').submit(e => {
         method: 'post',
         data: $('#edit-dealer-form').serialize(),
         success: (response => {
-            checklogin(response, (response) => {
+            checklogin(response, () => {
                 var x = document.getElementById(response._id)
                 // x.querySelector('p.dealer-name').innerHTML = response.name + '<br><br>' + response.phone
                 // x.querySelector('p.address').innerHTML = '<strong>' + response.store + '</strong><br><br>' + response.address
@@ -79,11 +70,13 @@ $('#add-dealer-form').submit(e => {
         method: 'post',
         data: $('#add-dealer-form').serialize(),
         success: (response => {
-            checklogin(response, response => {
-                doesChangeOccure = true
-                $('#add-dealer-form')[0].reset()
-                showSnackbar(response.name + ' added as a dealer')
-
+            checklogin(response, () => {
+                if (response.err) showSnackbar(err)
+                else {
+                    doesChangeOccure = true
+                    $('#add-dealer-form')[0].reset()
+                    showSnackbar(response.name + ' added as a dealer')
+                }
             })
         })
     })

@@ -7,14 +7,27 @@ module.exports = {
     // function to add a dealer to database 
     createDealer: (dealerData) => {
         return new Promise(async (resolve, reject) => {
-            let password = await bcrypt.hash('1234', 10)
-            dealerData.password = password
-            dealerData.open = false
-            dealerData.banned = false
-            const newDealer = await db.get().collection(DEALER_COLLECTION).insertOne(dealerData)
-                .then(dealer => {
-                    resolve(dealer.ops[0])
-                })
+            const ExistingDealer = db.get().collection(DEALER_COLLECTION)
+                .findOne({ $or: [{ email: dealerData.email }, { phone: dealerData.phone }] })
+            let password = bcrypt.hash('1234', 10)
+            Promise.all([ExistingDealer, password]).then(values => {
+
+                if (values[0]) {
+                    let err = 'found a match with same '
+                    if (values[0].email == dealerData.email) err += 'email, '
+                    if (values[0].phone == dealerData.phone) err += 'phone, '
+                    reject(err)
+                }
+                else {
+                    dealerData.password = values[1]
+                    dealerData.openStatus = false
+                    dealerData.banned = false
+                    db.get().collection(DEALER_COLLECTION).insertOne(dealerData)
+                        .then(dealer => {
+                            resolve(dealer.ops[0])
+                        }).catch(err => reject({ err: 'sorry some err in the database' }))
+                }
+            })
         })
     },
     // function to find all dealers in the data base

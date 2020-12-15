@@ -2,7 +2,7 @@ const router = require('express').Router()
 const adminDbFunction = require('./dbfunction/admindbfunction')
 const dealerDbfunction = require('./dbfunction/adminDealer')
 
-
+const formHeading = 'Admin login'
 const admin = true
 let loginerr = false
 let requsted_url = '/admin/admin-panel'
@@ -29,7 +29,7 @@ router.get('/', (req, res) => {
         res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
         res.header('Expires', '-1')
         res.header('Pragma', 'no-cache')
-        res.render('login', { route: '/admin', errmsg: loginerr })
+        res.render('login', { route: '/admin', Admin: true, errmsg: loginerr, formHeading })
         loginerr = false
     }
 })
@@ -50,10 +50,8 @@ router.post('/', (req, res) => {
                 req.session.name = admin.name
                 res.redirect(requsted_url)
             } else {
-                res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-                res.header('Expires', '-1')
-                res.header('Pragma', 'no-cache')
-                res.render('login', { route: '/admin', errmsg: 'password or name is wrong' })
+                loginerr = 'password or name is wrong'
+                res.redirect('/admin',)
             }
         })
     }
@@ -92,37 +90,33 @@ router.post('/disable', veryfyAdmin, (req, res) => {
 })
 // route for admin panel 
 router.get('/admin-panel', veryfyAdmin, (req, res) => {
-    if (req.session.admin) {
-        let banned = []
-        let open = []
-        let close = []
-        dealerDbfunction.getallDealers().then(dealers => {
-            dealers.forEach(dealer => {
-                if (dealer.banned) banned.push(dealer)
-                else {
-                    if (dealer.open) open.push(dealer)
-                    else close.push(dealer)
-                }
-            })
-            let opendealers = open.length
-            let closeddealers = close.length
-            let totalDealers = closeddealers + opendealers
-            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-            res.header('Expires', '-1')
-            res.header('Pragma', 'no-cache')
-            res.render('admin/admin-panel', { totalDealers, opendealers, closeddealers, admin, banned, open, close, appStatus: req.session.appStatus })
+
+    let banned = []
+    let open = []
+    let close = []
+    dealerDbfunction.getallDealers().then(dealers => {
+        dealers.forEach(dealer => {
+            if (dealer.banned) banned.push(dealer)
+            else {
+                if (dealer.openStatus) open.push(dealer)
+                else close.push(dealer)
+            }
         })
-    } else res.redirect('/admin')
+        let opendealers = open.length
+        let closeddealers = close.length
+        let totalDealers = closeddealers + opendealers
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1')
+        res.header('Pragma', 'no-cache')
+        res.render('admin/admin-panel', { totalDealers, opendealers, closeddealers, admin, banned, open, close, appStatus: req.session.appStatus })
+    })
+
 })
 // route for create new delaer
 router.post('/createDealer', veryfyAdmin, (req, res) => {
     dealerDbfunction.createDealer(req.body).then(dealer => {
-
         res.json(dealer)
-
-    })
-
-
+    }).catch(err => res.json({ err: err }))
 })
 // route for editing a specific dealer
 router.post('/editDealer', veryfyAdmin, (req, res) => {
@@ -156,7 +150,7 @@ router.post('/dealerstatus/', veryfyAdmin, (req, res) => {
 
     if (req.body.banned === 'ban') {
         req.body.banned = true
-        req.body.open = false
+        req.body.openStatus = false
     }
     else if (req.body.banned == 'unban') req.body.banned = false
 

@@ -4,7 +4,7 @@ const db = require('./config/connection')
 const exhbs = require('express-handlebars')
 const session = require('express-session')
 const fileUpload = require('express-fileupload')
-
+const sharp = require('sharp')
 const app = express()
 
 // setting view engin

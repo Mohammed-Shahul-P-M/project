@@ -2,10 +2,10 @@ name of the project :  grocery delivery system
 start date          : 22-11-2020
 author              : mohammed shahul p m 
 
-                First commit 
+                First commit cd2e2fb96e89ddb6c2aa65087eb49aad300a4588
 ----------------------------------------------
 coded straigt until 26-11-2020 without initial committing 
-oh damn 26 - 4th dec redesigning the web page and changing all stuf related to it , ans converted to single page app
+oh damn 26 - 4th dec redesigning the web page and changing all stuf related to it , and converted to single page app
 
 finished module admin for the app 
 ---------------------------------
@@ -17,7 +17,7 @@ app.js    -> main file to start the app and command is -> " node app.js "
 admin.js ->  file for all admin related route 
 
 admindbfunction.js -> file for all database function for admin
-
+adminDealer.js     ->  function for dealer database for admin
 routes
 ----------
 no
@@ -46,3 +46,45 @@ no
 
 135 get : /deleteDealer/:id -> for deleting a specific dealer 
 
+-----------------------------------15-12-2020------------------------------------
+finished dealer module almoast
+2nd ------ commit 
+login setup for dealer (using same hbs file for each section of website)
+dealer.js              ->  file for all route for dealer regarding function 
+dealerdbfunction.js    ->  file for all database function for dealer 
+dashboard.hbs          ->  only file for showing all setup for dealer using tab view for each section
+
+No of      route          functions in that routes
+line                         
+--------------------------------------------------------------------------------------------------- 
+11                         function to veryfiy dealer authentication and managing deferent route 
+
+31  get  : /               route to render login form with deferent err messages
+
+40  post : /               route to veryfiy credentials if dealer exist -> dealer dashboards  
+                                                   else  redierect to login form with err message
+56  get  : /dashboard      route to render dashboard.hbs file with proper details
+
+63  post : /edit-dealernfo  route to edit dealer details ecept email and password including pro pic or 
+                            excluded pro pic most of the possible errors managed pretty descently
+93  post : /add-product    route to add product to the database with image or not
+
+114 post : /edit/product   route to edit product details(name,catogory,price,image) and dealing with 
+                                     posible errors
+142 post : /addStocks      route to add stocks to each product
+
+151 post : /update-time    route to update opening and closing time of the shop
+
+165 post : /close-shop     route to open or close a shop
+
+174 post : /disable        route to disable on enable a product
+
+184 delete : /delete/product   route to delete a product and realoading for fresh data
+
+196 get  : /getdata        route to provide all essential data to the front-end when page loading
+
+202 post :/updatecatogory  update catogoryname list when a new catogory is added to database
+
+210 post :/change-password password changing 
+
+216 get  : /logout  

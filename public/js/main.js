@@ -8,3 +8,12 @@ function showSnackbar(value) {
     // After 3 seconds, remove the show class from DIV
     setTimeout(function () { x.className = x.className.replace("show", ""); }, 3000);
 }
+var doesChangeOccure = false // for refreshing home page
+// function to refresh home page 
+function refreshHome() {
+    if (doesChangeOccure) {
+        doesChangeOccure = false
+        location.reload()
+    }
+
+}
