@@ -22,6 +22,8 @@ module.exports = {
                     dealerData.password = values[1]
                     dealerData.openStatus = false
                     dealerData.banned = false
+                    dealerData.products = []
+                    dealerData.catogories = []
                     db.get().collection(DEALER_COLLECTION).insertOne(dealerData)
                         .then(dealer => {
                             resolve(dealer.ops[0])

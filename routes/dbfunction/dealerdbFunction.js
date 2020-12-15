@@ -20,7 +20,6 @@ module.exports = {
     },
     //function to update catogory list 
     updateCatogory: (data, id) => {
-        console.log(data + ' ' + id)
         db.get().collection(DEALER_COLLECTION).findOneAndUpdate(
             { _id: ObjectId(id) },
             { $push: { catogories: data } }

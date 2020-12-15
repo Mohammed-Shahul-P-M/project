@@ -48,7 +48,7 @@ no
 
 -----------------------------------15-12-2020------------------------------------
 finished dealer module almoast
-2nd ------ commit 
+2nd ------ commit id 9abe1428d8a38f407bfd0c7427ca1e602c81d4f8
 login setup for dealer (using same hbs file for each section of website)
 dealer.js              ->  file for all route for dealer regarding function 
 dealerdbfunction.js    ->  file for all database function for dealer 

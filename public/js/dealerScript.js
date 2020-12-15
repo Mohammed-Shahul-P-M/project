@@ -172,6 +172,7 @@ $('#addproduct').submit(e => {
                 let action = 'Enable'
                 let bG = 'rgb(2, 174, 162)'
                 status = true
+                let index = datas.products.length
                 if (result.status) {
                     action = 'Disable'
                     status = false
@@ -186,7 +187,7 @@ $('#addproduct').submit(e => {
                 <p class="price">${result.price} </p>
                 <p class="stock">${result.stock} <span>${result.unit}</span> </p>
                 <p class="action">
-                    <button data-id="${result._id}" onclick="changeStatus(event,'${status}')"
+                    <button data-id="${result._id}"data-index="${index}" onclick="changeStatus(event,'${status}')"
                         style="background-color: ${bG};">${action}</button>
                    
                     <button onclick="showEditform(${datas.products.length})"
@@ -232,8 +233,8 @@ $('#edit-products').submit(e => {
         processData: false,
         dataType: 'json',
         success: (response => {
-            checkAuth(result)
-            updateCatogory(result.catogory)
+            checkAuth(response)
+            updateCatogory(response.catogory)
             if (response.imgErr) {
                 showSnackbar('data edited but error in changing pics')
                 datas.products[index] = response.data
@@ -258,7 +259,7 @@ function showAddStock(index) {
     let product = datas.products[index]
     let reqForm = document.getElementById('edit-stock')
     reqForm.style.visibility = 'visible'
-    reqForm.querySelector('p.oldstock>span').innerText = product.stock
+    reqForm.querySelector('p.oldstock>span').innerText = product.stock + ' ' + product.unit
     reqForm.querySelector('input[name="id"]').value = product._id
     reqForm.querySelector('input[name="index"]').value = index
 }
@@ -283,7 +284,9 @@ $('#edit-stock').submit(e => {
                 let edittedDiv = document.getElementById(result._id)
                 let edittedElement = edittedDiv.querySelector('p.stock')
                 edittedElement.innerHTML = result.stock + ` <span>${result.unit}</span> `
-            }
+                $('#edit-stock')[0].reset()
+                showSnackbar('stock Added')
+            } else showSnackbar('oh crapp error occured')
         })
     })
 })
