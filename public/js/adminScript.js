@@ -46,11 +46,13 @@ function editDealer(Id) {
 // function to edit dealer details through ajax
 $('#edit-dealer-form').submit(e => {
     e.preventDefault()
+    showLoading()
     $.ajax({
         url: '/admin/editDealer',
         method: 'post',
         data: $('#edit-dealer-form').serialize(),
         success: (response => {
+            hideLoading()
             checklogin(response, () => {
                 var x = document.getElementById(response._id)
                 // x.querySelector('p.dealer-name').innerHTML = response.name + '<br><br>' + response.phone
@@ -65,13 +67,15 @@ $('#edit-dealer-form').submit(e => {
 // function to add new dealer
 $('#add-dealer-form').submit(e => {
     e.preventDefault()
+    showLoading()
     $.ajax({
         url: '/admin/createDealer',
         method: 'post',
         data: $('#add-dealer-form').serialize(),
         success: (response => {
+            hideLoading()
             checklogin(response, () => {
-                if (response.err) showSnackbar(err)
+                if (response.err) showSnackbar(response.err)
                 else {
                     doesChangeOccure = true
                     $('#add-dealer-form')[0].reset()
@@ -85,11 +89,13 @@ $('#add-dealer-form').submit(e => {
 function deleteDealer(id, name, classname) {
     let r = confirm('Do you want to delete the dealer ' + name)
     if (r) {
+
         $.ajax({
             url: '/admin/deletedealer',
             method: 'post',
             data: { id: id },
             success: (response => {
+
                 checklogin(response, () => {
                     // changing the count on the website
                     document.getElementById(id).remove()
@@ -163,11 +169,13 @@ function disableApp(value) {
 // function to update admin details   from admin-panel.hbs at  71 
 $('#edit-admin').submit(e => {
     e.preventDefault()
+    showLoading()
     $.ajax({
         url: '/admin/update',
         data: $('#edit-admin').serialize(),
         method: 'post',
         success: (response => {
+            hideLoading()
             if (response.name) {
 
                 $('#edit-admin')[0].reset()

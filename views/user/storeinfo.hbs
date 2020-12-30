@@ -1,0 +1,131 @@
+<style>
+    body {
+        background-color: #f8f1f1;
+    }
+
+
+
+    .storinfo {
+        background-color: #e9d7bf;
+        width: 20%;
+        min-height: 70vh;
+        min-width: 220px;
+        padding: 15px;
+        position: fixed;
+        top: 100px;
+        left: 20px;
+        text-align: center;
+        border-radius: 3px;
+        box-shadow: 0 0 1px 1px rgb(23, 100, 1);
+    }
+
+    .storinfo p.location {
+        font-weight: 550;
+        color: #961b05;
+    }
+
+    .storinfo p.address {
+        font-size: 0.8rem;
+        background-color: #f6f4e6;
+        box-shadow: 0 0 1px 1px gray;
+        padding: 5px;
+        border-radius: 4px;
+        color: rgb(96, 95, 95);
+        font-weight: 550;
+    }
+
+    .storinfo p.opentime {
+        background-color: #2d4059;
+        padding: 10px 10px;
+        margin-top: 30px;
+        color: whitesmoke;
+        text-align: left;
+        border-radius: 4px;
+    }
+
+    .storinfo p.opentime span {
+        margin-left: 25%;
+        background-color: whitesmoke;
+        color: #2d4059;
+        padding: 3px 8px;
+        width: 200px;
+        border-radius: 4px;
+        font-weight: 550;
+    }
+
+    .products {
+        width: 70%;
+        position: absolute;
+        left: 27%;
+        text-align: center;
+        z-index: -1;
+        background-color: rgb(236, 240, 241);
+        padding-top: 0;
+    }
+
+    .products .card {
+        width: 170px;
+        min-height: 200px;
+        display: inline-block;
+        background-color: whitesmoke;
+    }
+
+    .products p.heading {
+        text-align: left;
+        background-color: rgb(189, 192, 194);
+        padding: 3px 5px;
+    }
+
+    .products .card img {
+        width: 130px;
+        border-radius: 4px;
+        margin-top: 15px;
+        max-height: 100px;
+    }
+
+    .products .card p.price,
+    .products .card button {
+        display: inline-block;
+        margin: 10px;
+    }
+</style>
+
+<div class="storinfo">
+    <p class="heading"><i style="color: #0a0ac1;" class="fas fa-store-alt"></i> {{store.store}}</p>
+    <p class="location">{{store.location}}</p>
+    <p class="address">{{store.address}}</p>
+    <p class="opentime">Open <span style="color: rgb(14, 50, 157);">{{store.open}}</span></p>
+    <p class="opentime">Close <span style="color: red;">{{store.close}}</span></p>
+</div>
+<div class="products">
+    {{#each store.products}}
+    <p class="heading">{{this.name}}</p>
+    {{#each this.products}}
+    <div class="card">
+        <img src="/images/products/{{this.prodImage}}" alt="{{this.name}}">
+        <p class="topic">{{this.name}}</p>
+        {{#ifEq this.stock '0'}}
+        <p style="color: red;" class="noStock">Out of stock</p>
+        {{else}}
+        <p class="price">₹ {{this.price}}{{#ifEq this.unit 'kg'}}/kg{{/ifEq}}</p>
+        <button onclick="addTocart('{{this._id}}')">+</button>
+        {{/ifEq}}
+    </div>
+    {{/each}}
+    {{/each}}
+</div>
+<script>
+    function addTocart(id) {
+        $.ajax({
+            url: '/addTocart',
+            method: 'post',
+            data: {
+                prodId: id
+            },
+            success: (result => {
+                if (result.err) alert(result.err)
+                else showSnackbar('added to cart')
+            })
+        })
+    }
+</script>

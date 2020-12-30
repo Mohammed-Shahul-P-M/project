@@ -74,6 +74,11 @@ function updateCatogory(data) {
             success: (result => {
                 checkAuth(result)
                 datas.catogorylist.push(data)
+                // updating data set of catogories when adding new catogories 
+                let suggesiondataSet = document.getElementById('catogories')
+                let newOption = document.createElement('option')
+                newOption.value = data
+                suggesiondataSet.append(newOption)
             })
         })
     }
@@ -84,11 +89,13 @@ function updateCatogory(data) {
 function changeStatus(e, value) {
     let id = e.target.getAttribute('data-id')
     let index = e.target.getAttribute('data-index')
+    showLoading()
     $.ajax({
         url: '/dealer/disable',
         method: 'post',
         data: { id: id, status: value, index: index },
         success: (result => {
+            hideLoading()
             checkAuth(result)
             if (value == 'true') {
                 e.target.innerText = 'Disable'
@@ -107,11 +114,13 @@ function changeStatus(e, value) {
 // function to delete product 
 function deleteProduct(id) {
     let imgsrc = $('#' + id + '>img').attr('src')
+    showLoading()
     $.ajax({
         url: '/dealer/delete/product',
         data: { id: id, imgsrc: imgsrc },
         method: 'delete',
         success: (result => {
+            hideLoading()
             checkAuth(result)
             showSnackbar(result)
             $('#' + id).remove()
@@ -153,6 +162,7 @@ function setCatogory(value, id) {
 // function to add products 
 $('#addproduct').submit(e => {
     e.preventDefault()
+    showLoading()
     let formdata = new FormData(document.getElementById('addproduct'))
     $.ajax({
         url: '/dealer/add-product',
@@ -163,6 +173,7 @@ $('#addproduct').submit(e => {
         processData: false,
         dataType: 'json',
         success: (result => {
+            hideLoading()
             checkAuth(result)
             if (result.errmsg) showSnackbar(result.errmsg)
             else {
@@ -222,6 +233,7 @@ function showEditform(index) {
 // functiion to edit a product 
 $('#edit-products').submit(e => {
     e.preventDefault()
+    showLoading()
     let formdata = new FormData(document.getElementById('edit-products'))
     let index = formdata.get('index')
     $.ajax({
@@ -233,6 +245,7 @@ $('#edit-products').submit(e => {
         processData: false,
         dataType: 'json',
         success: (response => {
+            hideLoading()
             checkAuth(response)
             updateCatogory(response.catogory)
             if (response.imgErr) {
@@ -265,6 +278,7 @@ function showAddStock(index) {
 }
 // function to add more stocks 
 $('#edit-stock').submit(e => {
+    showLoading()
     e.preventDefault()
     let formdata = new FormData(document.getElementById('edit-stock'))
     $.ajax({
@@ -276,6 +290,7 @@ $('#edit-stock').submit(e => {
         processData: false,
         dataType: 'json',
         success: (result => {
+            hideLoading()
             checkAuth(result)
             if (result) {
                 let index = formdata.get('index')
@@ -298,11 +313,13 @@ function showUpdateTime(e) {
 // function to update time 
 $('#update-time').submit(e => {
     e.preventDefault()
+    showLoading()
     $.ajax({
         url: '/dealer/update-time',
         data: $('#update-time').serialize(),
         method: 'post',
         success: (result => {
+            hideLoading()
             checkAuth(result)
             showSnackbar('Time updated')
             document.getElementById('openTime').value = result.open
@@ -346,6 +363,7 @@ function toggleEdit() {
 // function to edit dealer info 
 $('#edit-dealer-info').submit(e => {
     e.preventDefault()
+    showLoading()
     formData = new FormData(document.getElementById('edit-dealer-info'))
     $.ajax({
         url: '/dealer/edit-dealerinfo',
@@ -356,6 +374,7 @@ $('#edit-dealer-info').submit(e => {
         processData: false,
         dataType: 'JSON',
         success: (result => {
+            hideLoading()
             checkAuth(result)
             showSnackbar(result)
             toggleEdit()
@@ -369,11 +388,13 @@ function changePassword() {
 }
 $('#edit-password').submit(e => {
     e.preventDefault()
+    showLoading()
     $.ajax({
         url: '/dealer/change-password',
         method: 'post',
         data: $('#edit-password').serialize(),
         success: (response => {
+            hideLoading()
             checkAuth(response)
             if (response.err) showSnackbar(response.err)
             else {

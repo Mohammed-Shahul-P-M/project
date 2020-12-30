@@ -1,0 +1,215 @@
+<style>
+    #showStore {
+        position: absolute;
+        left: 0;
+        top: 70px;
+        background-color: rgb(61, 60, 60);
+        width: 100%;
+        z-index: 1;
+        min-height: 150%;
+        text-align: center;
+        display: none;
+    }
+
+    #showStore .card {
+        width: 170px;
+        padding: 10px;
+        text-align: center;
+        min-height: 200px;
+        display: inline-block;
+        position: relative;
+        background-color: rgb(241, 247, 243);
+        box-shadow: none;
+    }
+
+    @media (max-width:400px) {
+        #showStore {
+            top: 100px;
+        }
+
+        #showStore .card {
+            width: 140px;
+            min-height: 170px;
+            margin: 8px;
+        }
+    }
+
+    #showStore .card p.address {
+        font-size: 0.7rem;
+        margin-top: 0;
+        font-weight: 550;
+        color: rgb(105, 103, 103);
+    }
+
+    #showStore .card button {
+        background-color: rgb(163, 211, 204);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        top: 75%;
+        border-radius: 24px;
+        color: black;
+        border: 1px solid grey;
+        opacity: 0.9;
+    }
+
+    #showStore .card button:hover {
+        opacity: 1;
+        background-color: dodgerblue;
+    }
+
+    #showStore .card p.location {
+        color: rgb(184, 6, 6);
+        padding: 2px 2px;
+        margin-bottom: 5px;
+        font-weight: 550;
+        font-size: 0.8rem;
+    }
+
+    #showStore .card i {
+        color: rgb(8, 172, 8);
+    }
+
+    #showStore .noitem {
+        font-size: 1.5rem;
+        color: rgb(192, 194, 98);
+        margin-top: 100px;
+    }
+
+    #showStore .closebtn {
+        color: rgb(252, 57, 57);
+        font-weight: 550;
+        font-size: 1rem;
+        position: absolute;
+        top: 0;
+        right: 7%;
+        cursor: pointer;
+    }
+
+    #showStore p.heading {
+        font-size: 1.5rem;
+        color: whitesmoke;
+    }
+
+    #dropDownmenu {
+        width: 250px;
+        position: absolute;
+        z-index: 1;
+        background-color: rgb(8, 81, 81);
+        text-align: center;
+        color: white;
+        top: 63px;
+        font-size: 0.8rem;
+        left: 65%;
+        display: none;
+    }
+
+    #dropDownmenu p {
+        cursor: pointer;
+        padding: 5px 0;
+        margin: 15px 0;
+    }
+
+    #dropDownmenu p:hover {
+        background-color: rgb(46, 42, 42);
+    }
+
+    #dropDownmenu p.name {
+        font-weight: 550;
+        margin-top: 0;
+    }
+
+    #dropDownmenu p.btn {
+        background-color: black;
+        width: 45%;
+        border-radius: 4px;
+        color: chartreuse;
+        margin: auto auto 15px;
+        padding: 5px;
+    }
+
+    #dropDownmenu .closeBtn:hover {
+        background-color: inherit;
+    }
+
+    #dropDownmenu .closeBtn {
+        text-align: right;
+        margin: 0;
+        margin-right: 10%;
+        font-size: 1.5rem;
+        color: rgb(253, 43, 43);
+        font-weight: 550;
+    }
+
+    @media (max-width:400px) {
+        #dropDownmenu {
+            width: 100%;
+            left: 0;
+        }
+    }
+</style>
+<nav>
+    <span onclick="location.replace('/')" class="nav-brand">Big Mart</span>
+    <input type="search" oninput="showStore(this.value)" placeholder="Type your location to find store nearby"
+        class="nav-search">
+    <i class="fas fa-user nav-user" onclick="document.getElementById('dropDownmenu').style.display='block'">
+        <span>account</span></i>
+    <a href="/cart"><i class="fas fa-shopping-cart nav-cart"> <span>cart</span></i></a>
+    <span id="cartCount">0</span>
+</nav>
+<div id="snackbar">Some text some message..</div>
+
+<div class="dropDown-menu" id="dropDownmenu">
+    <p onclick="document.getElementById('dropDownmenu').style.display='none'" class="closeBtn">x</p>
+    {{#if userData}}
+    <p class="name">{{userData.name}}</p>
+    <p onclick="location.replace('/profile')" class="profile">profile</p>
+    <p onclick="showSavedStore()" class="srlist">Saved stores </p>
+    <p onclick="location.replace('/logout')" class="btn">Logout</p>
+    {{else}}
+    <p onclick="location.replace('/login')" class="btn">Login</p>
+    <p onclick="location.replace('/register')" class="btn">Register</p>
+    {{/if}}
+</div>
+{{>loading-animation}}
+<div id="showStore">
+</div>
+<script>
+    var userdata = JSON.parse('{{{json userData}}}')
+    let cartCount = 0
+    userdata.cart.forEach(item => (item.products.length > 0) ? cartCount += 1 : cartCount += 0)
+    if (cartCount > 0) {
+        let reqDiv = document.getElementById('cartCount')
+        reqDiv.innerText = cartCount
+        reqDiv.style.visibility = 'visible'
+    }
+    function showSavedStore() {
+        document.getElementById('dropDownmenu').style.display = 'none'
+        $.ajax({
+            url: '/usersavedStore',
+            method: 'get',
+            success: (data => {
+                let sugessionStore = []
+                let sugessionDiv = document.getElementById('showStore')
+                if (data.length == 0) {
+                    sugessionDiv.innerHTML = `<p class="heading">Saved stores</p> 
+                                              <p onclick="document.getElementById('showStore').style.display='none'" class="closebtn">close</p>
+                                     <p class="noitem"><i class="far fa-frown"></i> Sorry no store to display stores will be added when you make orders ...</p>`
+                } else {
+                    sugessionDiv.innerHTML = `<p class="heading">Saved stores</p>     
+                                              <p onclick="document.getElementById('showStore').style.display='none'" class="closebtn">close</p>`
+                    data.forEach(store => {
+                        let newDiv = document.createElement('div')
+                        newDiv.classList = 'card'
+                        newDiv.innerHTML = ` <p class="topic"><i class="fas fa-store-alt"></i> ${store.store}</p>
+                                     <p class="location">${store.location} </p>
+                                    <p class="address">${store.address} </p>
+                                     <button onclick="location.replace('/store/${store._id}')">Shop Now</button>`
+                        sugessionDiv.append(newDiv)
+                    })
+                }
+                sugessionDiv.style.display = 'block'
+            })
+        })
+    }
+</script>

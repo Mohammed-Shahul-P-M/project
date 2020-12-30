@@ -1,6 +1,7 @@
 const db = require('../../config/connection')
 const DEALER_COLLECTION = 'dealers'
-const PRODUCT_COLLECTION = 'products'
+const ORDERS_COLLECTION = 'orders'
+const ORDERhISTORY_COLLECTION = 'orderHistory'
 const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 
@@ -156,6 +157,68 @@ module.exports = {
             const foundDealer = await db.get().collection(DEALER_COLLECTION).findOne({ _id: ObjectId(id) })
             if (foundDealer) resolve(foundDealer)
             else reject(null)
+        })
+    },
+    // function to get all orders from databse 
+    getAllOrders: (id) => {
+        return new Promise(async (resolve, reject) => {
+            const allOrders = await db.get().collection(ORDERS_COLLECTION).find({ storeId: ObjectId(id) }).toArray()
+            if (allOrders && allOrders.length > 0) resolve(allOrders)
+            else resolve(null)
+        })
+    },
+    // function to get all order history 
+    getAllOrdersHistory: (id) => {
+        return new Promise(async (resolve, reject) => {
+            const allOrdersHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find().toArray()
+            if (allOrdersHistory && allOrdersHistory.length > 0) resolve(allOrdersHistory)
+            else resolve(null)
+        })
+    },
+    // function to change Status of an order 
+    changeOrderStatus: (data) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const changedOrder = await db.get().collection(ORDERS_COLLECTION).findOneAndUpdate(
+                    { _id: ObjectId(data.id) },
+                    { $set: { status: data.status } },
+                    { returnOriginal: false }
+                )
+                if (changedOrder) resolve(changedOrder.value)
+                else resolve(null)
+            } catch (error) {
+                resolve(null)
+            }
+
+        })
+    },
+    //function to move an order to orderHistory 
+    deleteOrder: (order) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                order.finishedDate = new Date()
+                delete order.openTime
+                delete order.closeTime
+                order.cartItems.forEach((i, index) => {
+                    delete i.catogory
+                    delete i.stock
+                    delete i.prodImage
+                    delete i.status
+                    order.cartItems[index] = i
+                })
+                console.log('order : ', order);
+                let allPromis = await Promise.all([
+                    db.get().collection(ORDERS_COLLECTION).findOneAndDelete({ _id: ObjectId(order._id) }, { returnOriginal: false }),
+                    db.get().collection(ORDERhISTORY_COLLECTION).insertOne(order)
+                ])
+                console.log(allPromis[0]);
+                console.log(allPromis[1].ops[0]);
+                resolve('success')
+
+            } catch (err) {
+                console.log(err);
+                resolve(null)
+            }
         })
     }
 }

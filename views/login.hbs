@@ -42,6 +42,7 @@
 
     }
 
+
     input:focus {
         outline: rgb(25, 176, 11);
     }
@@ -76,21 +77,80 @@
         font-weight: 600;
         color: rgb(25, 176, 11);
     }
+
+    @media screen and (max-width:400px) {
+        .login {
+            min-height: 300px;
+            margin-top: 25%;
+        }
+
+        nav span,
+        p,
+        p.heading {
+            font-weight: 700;
+        }
+
+        nav {
+            background-color: rgb(228, 233, 231);
+            text-align: center;
+        }
+
+
+    }
+
+
+    .otp-veryfiy {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(20, 15, 15, 0.789);
+        z-index: 1;
+        top: 0;
+        left: 0;
+        visibility: hidden;
+    }
+
+    #veryfy-otp {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        background-color: whitesmoke;
+        transform: translate(-50%, -50%);
+        padding: 0 10px 20px;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .otp-veryfiy input {
+        padding: 5px;
+        border-radius: 5px;
+        outline: none;
+        margin-top: -10px;
+        border: 1px solid rgb(189, 188, 188);
+    }
+
+    .otp-veryfiy input[type='submit'] {
+        background-color: dodgerblue;
+        color: white;
+        font-weight: 550;
+        border: none;
+        padding: 5px 10px;
+    }
 </style>
 <nav>
     <span>Big Mart</span>
 </nav>
 {{#if signup}}
 {{!-- ------------------ section for signup ------------- --}}
-{{!-- ----------------------sign up ----------------------------  --}}
-<div id="sign-up" class="login">
-    <form action="{{route}}" method="post">
+{{!-- ----------------------sign up ---------------------------- --}}
+<div style="margin-top: 100px;" id="sign-up" class="login">
+    <form id="register-user" action="{{route}}" method="post">
         <p class="heading">{{formHeading}}</p>
-        <input type="email" name="email" placeholder=" email">
+        <input type="number" min="1000000000" name="phone" placeholder=" phone">
         <input type="password" name="password" placeholder=" password">
         <input type="submit" value="Log in">
     </form>
-    {{#if loginroute}} <p>Already have an account <a href="">login</a></p>
+    {{#if loginroute}} <p>Already have an account <a href="{{loginroute}}">login</a></p>
     {{/if}}
 </div>
 {{else}}
@@ -99,16 +159,26 @@
     {{errmsg}}
 </div>
 {{/if}}
-{{!--  -------------------------------login-----------------------  --}}
+{{!-- -------------------------------login----------------------- --}}
 <div id="login" class="login">
     <form action="{{route}}" method="post">
         <p class="heading">{{formHeading}}</p>
-        <input type="text" {{#if Admin}} name="name" placeholder="username or email" {{else }} name="email"
-            placeholder="email" {{/if}}>
+        <input type="text" {{#if Admin}} name="name" placeholder="username or email" {{else if userlogin}} name="phone"
+            placeholder="Phone No" {{else }} name="email" placeholder="email" {{/if}}>
         <input type="password" name="password" placeholder=" password">
         <input type="submit" value="Log in">
     </form>
-    {{#if signuproute}} <p>don't have an account <a href="">signup</a></p>
+    {{#if signuproute}} <p>don't have an account <a href="{{signuproute}}">signup</a></p>
     {{/if}}
 </div>
+
 {{/if}}
+<div class="otp-veryfiy">
+    <form action="" id="veryfy-otp" method="post">
+        <p class="heading">Veryfy otp</p>
+        <input type="number" name="otp" placeholder="Enter otp">
+        <input type="hidden" name="verify" value="ok">
+        <input type="submit" value="veryfy otp"><br><br>
+        did't get otp <a onclick="resndOtp(event)" href="">resnd</a>
+    </form>
+</div>

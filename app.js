@@ -16,6 +16,20 @@ const hbs = exhbs.create({
     helpers: {
         inc: function (value, option) {
             return parseInt(value) + 1
+        },
+        ifEq: function (key, value, options) {
+            if (key == value) return options.fn(this)
+            else return options.inverse(this)
+        },
+        iflt: function (key, value, option) {
+            if (key < value) return option.fn(this)
+            else return option.inverse(this)
+        },
+        X: function (val, val2) {
+            return (val * val2)
+        },
+        json: function (obj) {
+            return JSON.stringify(obj)
         }
     }
 })

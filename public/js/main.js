@@ -17,3 +17,11 @@ function refreshHome() {
     }
 
 }
+// function to show loading animation 
+function showLoading() {
+    document.getElementById('loadingAnimation').style.display = 'block'
+}
+// function to close loading animation 
+function hideLoading() {
+    document.getElementById('loadingAnimation').style.display = 'none'
+}

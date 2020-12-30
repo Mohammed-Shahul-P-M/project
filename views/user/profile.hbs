@@ -1,0 +1,322 @@
+<style>
+    body {
+        padding-bottom: 20px;
+        min-height: 100vh;
+        background-color: rgba(15, 15, 15, 0.939);
+    }
+
+    .menu,
+    .usercard,
+    #update-user-profile {
+        position: absolute;
+        background-color: rgba(49, 5, 5, 0.707);
+        box-shadow: 2px 2px rgb(9, 247, 64);
+        color: white;
+    }
+
+    #update-user-profile {
+        width: 80%;
+        max-width: 450px;
+        padding: 10px 20px;
+        border-radius: 4px;
+        left: 50%;
+        margin-bottom: 30px;
+    }
+
+    #update-user-profile label {
+        font-size: 0.7rem;
+        margin-top: 3px;
+        display: block;
+
+    }
+
+    #update-user-profile>input,
+    textarea {
+        width: 90%;
+        margin: 4px auto;
+        border-radius: 4px;
+        background-color: rgb(233, 247, 243);
+    }
+
+    #update-user-profile input {
+        height: 25px;
+    }
+
+    .menu,
+    .usercard {
+        width: 80%;
+        max-width: 350px;
+        padding: 5px 10px;
+        margin-bottom: 20px;
+        left: 20px;
+        border-radius: 4px;
+    }
+
+    .usercard {
+        height: 30px;
+
+    }
+
+    .usercard i {
+        position: relative;
+    }
+
+    .menu {
+        top: 160px;
+    }
+
+    .menu a {
+        font-weight: 550;
+        font-size: 0.9rem;
+        color: turquoise;
+        display: block;
+        margin: 20px 5px;
+    }
+
+    #update-user-profile p.heading span {
+        font-size: 0.9rem;
+        color: blue;
+        margin-left: 50px;
+        cursor: pointer;
+    }
+
+    #update-user-profile input[type='submit'] {
+        outline: none;
+        border: none;
+        background-color: dodgerblue;
+        color: whitesmoke;
+        margin-bottom: 10px;
+        visibility: hidden;
+        cursor: pointer;
+    }
+</style>
+
+
+<div id="snackbar">Some text some message..</div>
+<div class="usercard">
+    <i class="fas fa-user"> Hi welcome {{userData.name}}</i>
+</div>
+<div class="menu">
+    <a href="3">Personal Info</a>
+    <a onclick="showOrderContainer()" href="#">Orders</a>
+    <a onclick="showOrderContainer()" href="#">Order History</a>
+    <a href="3">Store list</a>
+</div>
+<form id="update-user-profile" action="" class="" method="post">
+    <p class="heading">Personal Information <span onclick="showEditForm(event)">Edit</span></p>
+    <label for="name">Name</label>
+    <input type="text" name="name" value="{{userData.name}}" required disabled>
+    <label for="phone">Phone No</label>
+    <input type="text" value="{{userData.phone}}" disabled>
+    <label for="email">Email</label>
+    <input type="email" name="email" disabled required value="{{userData.email}}">
+    <label for="address">Delivery Address</label>
+    <textarea name="address" cols="30" disabled rows="3">{{userData.address}}</textarea>
+    <input type="submit" value="Save changes">
+</form>
+<style>
+    .container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        width: 100%;
+        min-height: 100vh;
+        height: 100vh;
+        background-color: rgba(20, 19, 19, 0.952);
+        visibility: hidden;
+    }
+
+    .container p.btn {
+        font-weight: 550;
+        background-color: rgb(201, 196, 201);
+        max-width: 150px;
+        text-align: center;
+        padding: 2px 0;
+        border-radius: 4px;
+        margin-left: 30px;
+    }
+
+    .container .orders {
+        position: fixed;
+        width: 90%;
+        max-width: 800px;
+        background-color: rgb(252, 247, 252);
+        padding: 5px;
+        margin-top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 4px;
+    }
+
+    .container .orders .order-content {
+        width: 94%;
+        min-height: 300px;
+        height: 70vh;
+        overflow-y: scroll;
+        background-color: rgb(241, 212, 241);
+        border-radius: 4px;
+        margin: 3%;
+        padding-top: 10px;
+    }
+
+    .order-content .each-order {
+        width: 86%;
+        margin: 10px 3%;
+        box-shadow: 1px 1px 3px 3px gray;
+        background-color: rgb(236, 230, 230);
+        border-radius: 4px;
+        position: relative;
+        min-height: 80px;
+        font-size: 0.7rem;
+        padding: 10px;
+        padding-left: 20px;
+    }
+
+    .order-content .each-order p {
+        position: absolute;
+        font-size: 0.8rem;
+        font-weight: 550;
+    }
+
+    .order-content .each-order p.orderId {
+        color: rgb(13, 93, 93);
+        right: 5%;
+        top: -2px;
+        font-size: 0.65rem;
+    }
+
+    .order-content .each-order p.order-total {
+        right: 35%;
+        bottom: -5px;
+        color: rgb(169, 33, 9);
+    }
+
+    .order-content .each-order p.track {
+        right: 10%;
+        bottom: 0;
+        font-size: 0.6rem;
+        padding: 3px;
+        color: darkorchid;
+        font-weight: 550;
+    }
+
+    .order-content .each-order p.track span {
+        background-color: rgb(181, 211, 181);
+        border-radius: 4px;
+        padding: 4px;
+        color: darkred;
+    }
+
+    .order-content .each-order span.itemTotal {
+        position: absolute;
+        left: 30%;
+        color: rgb(11, 111, 9);
+    }
+
+    .order-content .each-order span.qnt {
+        position: absolute;
+        left: 25%;
+        color: blue;
+    }
+
+    .each-order p.date {
+        font-size: 0.6rem;
+        right: 10%;
+        font-weight: 550;
+        top: 30px;
+        color: rgb(177, 96, 68);
+    }
+
+    .each-order p.Titems {
+        right: 45%;
+        bottom: 0;
+        font-weight: 550;
+        font-size: 0.7rem;
+        color: mediumblue;
+    }
+
+    .order-content .each-order p.store {
+        left: 40%;
+        top: 15px;
+        color: rgb(90, 5, 23);
+        background-color: rgba(181, 207, 214, 0.918);
+        padding: 3px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .container .orders .closeBtn {
+        position: absolute;
+        left: 93%;
+        font-size: 1.6rem;
+        top: 10px;
+        cursor: pointer;
+    }
+</style>
+<div id="order-container" class="container">
+    <div class="orders">
+        <p class="btn">Order History <span onclick="closeOrderContainer()" class="closeBtn">x</span></p>
+        <div class="order-content">
+            {{#each orders}}
+            <div class="each-order">
+                <p class="orderId">order_id : {{this._id}}</p>
+                <p class="order-total">₹ {{this.cartTotal}}</p>
+                <p class="date">{{this.date}}</p>
+                <p class="Titems">{{this.TotalItem}} Items</p>
+                <p onclick="location.replace('/store/{{this.storeId}}')" class="store">{{this.storeName}}</p>
+                <p class="track ">Status <span class="btn">{{this.status}}</span></p>
+                {{#each this.cartItems}}
+                {{this.name}} <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹ {{X this.qnt
+                    this.price}}</span><br>
+                {{/each}}
+            </div>
+            {{/each}}
+            {{#each orderHistory}}
+            <div class="each-order">
+                order
+            </div>
+            {{/each}}
+        </div>
+    </div>
+</div>
+<script>
+
+    function showEditForm(e) {
+        let innerText = e.target.innerText
+        innerText = (innerText == 'Edit') ? 'cancel' : 'Edit'
+        e.target.innerText = innerText
+        if (innerText == 'cancel') {
+            document.querySelector('#update-user-profile>input[name="name"]').removeAttribute('disabled')
+            document.querySelector('#update-user-profile>input[name="email"]').removeAttribute('disabled')
+            document.querySelector('#update-user-profile>textarea[name="address"]').removeAttribute('disabled')
+            document.querySelector('#update-user-profile>input[type="submit"]').setAttribute('style', 'visibility:visible')
+        } else if (innerText == 'Edit') {
+            document.querySelector('#update-user-profile>input[name="name"]').setAttribute('disabled', 'true')
+            document.querySelector('#update-user-profile>input[name="email"]').setAttribute('disabled', 'true')
+            document.querySelector('#update-user-profile>textarea[name="address"]').setAttribute('disabled', 'true')
+            document.querySelector('#update-user-profile>input[type="submit"]').setAttribute('style', 'visibility:hidden')
+        }
+    }
+    $('#update-user-profile').submit(e => {
+        e.preventDefault()
+        showLoading()
+        $.ajax({
+            url: '/updateProfile',
+            method: 'post',
+            data: $('#update-user-profile').serialize(),
+            success: (res => {
+                hideLoading()
+                if (res.loginErr) location.reload()
+                else if (res.err) alert(res.err)
+                else if (res) location.reload()
+            })
+        })
+    })
+    function showOrderContainer() {
+        document.getElementById('order-container').style.visibility = 'visible'
+    }
+    function closeOrderContainer() {
+        document.getElementById('order-container').style.visibility = 'hidden'
+    }
+</script>

@@ -1,0 +1,58 @@
+<style>
+    nav {
+        display: none;
+    }
+
+    div.order {
+        width: 90%;
+        max-width: 350px;
+        text-align: center;
+        border-radius: 4px;
+        position: absolute;
+        left: 50%;
+        top: 20%;
+        transform: translateX(-50%);
+        padding: 5px;
+    }
+
+    button {
+        background-color: rgb(10, 172, 94);
+        margin: 15px;
+    }
+
+    p.total,
+    p.mop {
+        text-align: left;
+        margin-left: 50px;
+        position: relative;
+    }
+
+    p.total {
+        font-weight: 550;
+    }
+
+    p span {
+        position: absolute;
+        left: 70%;
+        color: rgb(201, 3, 3);
+    }
+
+    p.heading {
+        font-size: 1.8rem;
+        color: rgb(10, 172, 94);
+    }
+
+    @media (min-width:400px) {
+        p.heading {
+            font-size: 1.4rem;
+        }
+    }
+</style>
+<div class="order">
+    <p style="font-weight: 700;color: rgb(11, 206, 112); font-size: 2.6rem;margin: 0;" class="heading">✓</p>
+    <p class="heading">Order Placed succesfully</p>
+    <p class="total">Total <span>₹ {{orderdata.total}}</span></p>
+    <p class="mop">Mode of payment <span>{{orderdata.mop}}</span></p>
+    <button onclick="location.replace('/')">Go shoping</button>
+    <button style="background-color:darkslateblue ;" onclick="location.replace('/profile')">Track order</button>
+</div>

@@ -18,11 +18,16 @@ async function verifyDealer(req, res, next) {
         next()
     }
     else {
-        if (req.url == '/dashboard') {
-            errmsg = 'Sorry session is timed Out'
-            dealerRequestedUrl = '/dealer' + req.url
-            res.redirect('/dealer')
-        } else res.json({ loginErr: 'Session timed out' })
+        dealerDbfunction.doLogin({ email: 'abdu@gmail.com', password: '1234' }).then(res => {
+            req.session.dealerId = res._id
+            Dealer = res
+            next()
+        })
+        // if (req.url == '/dashboard') {
+        //     errmsg = 'Sorry session is timed Out'
+        //     dealerRequestedUrl = '/dealer' + req.url
+        //     res.redirect('/dealer')
+        // } else res.json({ loginErr: 'Session timed out' })
 
     }
 }
@@ -53,11 +58,17 @@ router.post('/', (req, res) => {
     }
 })
 // route for dashboard of dealer 
-router.get('/dashboard', verifyDealer, (req, res) => {
+router.get('/dashboard', verifyDealer, async (req, res) => {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
     res.header('Expires', '-1')
     res.header('Pragma', 'no-cache')
-    res.render('dealer/dashboard', { dealer: Dealer })
+    let allOrderData = await Promise.all([
+        dealerDbfunction.getAllOrders(req.session.dealerId),
+        dealerDbfunction.getAllOrdersHistory(req.session.dealerId)
+    ])
+    let allOrders = allOrderData[0]
+    let allOrdersHistory = allOrderData[1]
+    res.render('dealer/dashboard', { dealer: Dealer, allOrders, allOrdersHistory })
 })
 // route to edit dealer info  from dealer dashboard 
 router.post('/edit-dealerinfo', verifyDealer, async (req, res) => {
@@ -216,5 +227,29 @@ router.post('/change-password', verifyDealer, (req, res) => {
 router.get('/logout', (req, res) => {
     req.session.destroy()
     res.redirect('/dealer')
+})
+// route to change status of order 
+router.post('/changeOrderStatus', verifyDealer, (req, res) => {
+
+
+    dealerDbfunction.changeOrderStatus(req.body).then(result => {
+        if (result) {
+            if (req.body.status == 'rejected' || req.body.status == 'delivered') {
+                dealerDbfunction.deleteOrder(result).then(response => {
+                    if (response) res.json('ok success')
+                    else res.json({ err: true })
+                })
+            } else res.json('ok')
+        } else res.json({ err: true })
+    })
+
+})
+let vr = 'hello'
+router.get('/demo', (req, res) => {
+    res.json(vr)
+})
+router.get('/demoo', (req, res) => {
+    vr = 'hai'
+    res.json(vr)
 })
 module.exports = router

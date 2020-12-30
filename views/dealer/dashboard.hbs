@@ -24,32 +24,60 @@
     <div id="orders-tab" class="tab orders-tab">
         <p class="heading"><i class="fas fa-list"></i> Orders </p>
         <div class="orders">
-            <div class="order">
-                <div class="user">shahul palamadathil</div>
+            {{#if allOrders}}
+            {{#each allOrders}}
+            <div id="order-div-id{{this._id}}" class="order">
+                <div class="user">{{this.user.name}} </div>
                 <div class="address">
                     <i class="fas fa-map-marker-alt"></i>
-                    palamadthil house , puthiyath puraya , 676305 pin
+                    {{this.user.address}} , ph:{{this.user.phone}}
                 </div>
-                <div class="time">just now</div>
+                <div class="time">{{this.date}} </div>
                 <div class="status">
-                    <select id="order-status" value='pending' name="status">
+                    <select id="{{this._id}}" onchange="changeOrderStatus(event)" name="status">
+                        {{#ifEq this.status 'pending'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="pending">pending</option>
+                        {{/ifEq}}
+                        {{#ifEq this.status 'out for delivery'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="out for delivery">
-                            out for delivery</option>
+                            out for delivery</option> {{/ifEq}}
+                        {{#ifEq this.status 'confirmed'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="confirmed">confirmed</option>
+                        {{/ifEq}}
+                        {{#ifEq this.status 'rejected'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="rejected">rejected</option>
+                        {{/ifEq}}
+                        {{#ifEq this.status 'delivered'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="delivered">delivered</option>
+                        {{/ifEq}}
+                        {{#ifEq this.status 'delayed'}}
+                        <option selected value="{{this.status}}">{{this.status}}</option>
+                        {{else}}
                         <option value="delayed">delayed</option>
+                        {{/ifEq}}
                     </select>
                     <button>submit</button>
                 </div>
-                <div class="view">View details</div>
+                <div onclick="showOrderDetails({{@index}})" class="view">View details</div>
                 <div class="total">
-                    <p class="cost">Total cost <span>400</span></p>
-                    <p class="item">Total item <span>12</span></p>
+                    <p class="cost">Total cost <span>₹ {{this.cartTotal}}</span></p>
+                    <p class="item">Total item <span>{{this.TotalItem}}</span></p>
                 </div>
             </div>
-
+            {{/each}}
+            {{else}}
+            <p>sorry no orders to display</p>
+            {{/if}}
         </div>
     </div>
     {{!-- ----section for order history --}}
@@ -126,8 +154,12 @@
                     <p class="form-title">Add product</p>
                     <input type="file" name='img' accept="image/*" required placeholder="add image">
                     <input type="text" name="name" placeholder="Name">
-                    <input id="firstInput" oninput="showSugession(event,this.value)" type="text" name="catogory"
-                        placeholder="Catogory">
+                    <input id="firstInput" list="catogories" name="catogory" placeholder="Catogory">
+                    <datalist id="catogories">
+                        {{#each dealer.catogories}}
+                        <option value="{{this}}"></option>
+                        {{/each}}
+                    </datalist>
                     <input type="number" min="1" name='price' step="0.01" placeholder="Price">
                     <input type="number" min="1" name="stock" placeholder="Stock">
                     <select name="unit" required>
@@ -140,8 +172,7 @@
                 <form id="addProductsbycatogory" autocomplete="off" id="add-products-form" action="" method="post">
                     <p class="form-title">Add products by catogory</p>
                     <input type="number" min="1" placeholder="No of product" name="noofproducts">
-                    <input id='secondinput' oninput="showSugession(event,this.value)" type="text" name="catogory"
-                        placeholder="Catogory">
+                    <input id='secondinput' list="catogories" name="catogory" placeholder="Catogory">
                     <select name="unit" required>
                         <option value="" selected disabled>select unit</option>
                         <option value="kg">kg</option>
@@ -253,51 +284,7 @@
 </div>
 {{!-- --------------------------------- section order deatails--------------------------- --}}
 <div id="order-details" class="order-details">
-    <div class="order-info">
-        <i class="close far fa-times-circle"></i>
-        <i class="fas fa-map-marker-alt"></i>
-        <div class="order-id">order_ID - tet566545wgygt6</div>
-        <div class="ordered-items">
-            <i class="fas fa-angle-up"></i>
-            <i class="fas fa-angle-down"></i>
-            <div class="each-item heading">
-                <p>Price</p>
-                <p></p>
-                <p></p>
-                <p>Qnt.</p>
-                <p>Total</p>
-            </div>
-            <div class="each-item">
-                <p class="price">₹ 120/kg</p>
-                <img src="/images/apple.png" alt="">
-                <p class="name">Apples</p>
-                <p class="qnt">500 gm</p>
-                <p class="total">₹ 60</p>
-            </div>
-            <div class="each-item">
-                <p class="price">₹ 120/kg</p>
-                <img src="/images/orange.jpg" alt="">
-                <p class="name">Oranges</p>
-                <p class="qnt">500 gm</p>
-                <p class="total">₹ 60</p>
-            </div>
-            <div class="each-item">
-                <p class="price">₹ 120/kg</p>
-                <img src="/images/Brown-eggs.jpg" alt="">
-                <p class="name">eggs</p>
-                <p class="qnt">500 gm</p>
-                <p class="total">₹ 60</p>
-            </div>
-        </div>
-        <div class="total total-cost">
-            <p class="cost">Total cost <span>400</span></p>
-            <p class="item">Total item <span>12</span></p>
-        </div>
-        <div class="address">
-            mohammed shahul palamadathil , palamadthilhouse , 676305 pin
-        </div>
-        <button>Print</button>
-    </div>
+
 </div>
 
 {{!-- ----------- ------------edit product form --------------- --}}
@@ -305,8 +292,7 @@
     <p class="heding">Edit product</p>
     <img src="" alt="no">
     <input value="name" class='ok' type="text" name='name'>
-    <input id="editcatogoryinput" value="catogory" oninput="showSugession(event,this.value)" class='ok' type="text"
-        name="catogory">
+    <input id="editcatogoryinput" value="catogory" list="catogories" class='ok' type="text" name="catogory">
     <input value="00" type="number" class='ok' step="0.01" name="price">
     <input value="00" type="text" readonly class='ok' name="stock">
     <input onchange="changeImage(event)" type="file" name="img" accept="image/*">
@@ -335,3 +321,67 @@
     <i style="position: absolute;top: 10px;left: 90%;color: red;" onclick="closePopup('edit-password')"
         class="far fa-times-circle"></i>
 </form>
+<script>
+
+    let allOrders = JSON.parse('{{{json allOrders}}}')
+    function showOrderDetails(index) {
+        let order = allOrders[index]
+        let DetailsDiv = document.getElementById('order-details')
+        DetailsDiv.innerHTML = ` <div class="order-info">
+        <i onclick="document.getElementById('order-details').style.visibility='hidden'"
+            class="close far fa-times-circle" style="cursor: pointer;"></i>
+        <i class="fas fa-map-marker-alt"></i>
+        <div class="order-id">order_ID - ${order._id}</div>
+        <div id='Orderd-Items' class="ordered-items">
+            <div class="each-item heading">
+                <p>Price</p>
+                <p>image</p>
+                <p>name</p>
+                <p>Qnt.</p>
+                <p>Total</p>
+            </div>
+        </div>
+        <div class="total total-cost">
+            <p class="cost">Total cost <span>${order.cartTotal}</span></p>
+            <p class="item">Total item <span>${order.TotalItem}</span></p>
+        </div>
+        <div class="address">${order.user.address} </div>
+        <button>Print</button>
+    </div>`
+        order.cartItems.forEach(i => {
+            let SubDiv = document.createElement('div')
+            SubDiv.classList = 'each-item'
+            i.total = i.qnt * i.price
+            if (i.unit == 'kg') i.qnt = (i.qnt * 1000) + ' gm'
+            SubDiv.innerHTML = ` <p class="price">₹ ${i.price}</p>
+                <img style="margin-left: 0;" src="/images/products/${i.prodImage}" alt="${i.name}">
+                <p class="name">${i.name}</p>
+                <p style="text-align: center;" class="qnt">${i.qnt}</p>
+                <p class="total">₹ ${i.total}</p>`
+            document.getElementById('Orderd-Items').append(SubDiv)
+        })
+        DetailsDiv.style.visibility = 'visible'
+    }
+    function changeOrderStatus(e) {
+        showLoading()
+        $.ajax({
+            url: '/dealer/changeOrderStatus',
+            method: 'post',
+            data: {
+                id: e.target.id,
+                status: e.target.value
+            },
+            success: (res => {
+                hideLoading()
+                if (res.err) alert('sorry some Error occured')
+                else {
+                    if (e.target.value == 'rejected' || e.target.value == 'delivered') {
+                        document.getElementById('order-div-id' + e.target.id).remove()
+                    }
+                }
+
+
+            })
+        })
+    }
+</script>
