@@ -528,6 +528,7 @@
             method: 'post',
             data: $('#update-user-profile').serialize(),
             success: (res => {
+                checkLogin(res)
                 hideLoading()
                 if (res.loginErr) location.reload()
                 else if (res.err) alert(res.err)

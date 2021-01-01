@@ -15,7 +15,9 @@ let instance = new Razorpay({
     key_secret: 'kWG2sc3vUVX8wiOiuIL7vpYB'
 })
 // function for verify user
+
 function veryfyUser(req, res, next) {
+
     if (req.session.userId) next()
     else {
         // userDbfunction.dologin({ phone: '9605020766', password: '1234' }).then(user => {
@@ -23,8 +25,13 @@ function veryfyUser(req, res, next) {
         //     userData = user
         //     next()
         // })
-
-        res.redirect('/login')
+        let urls = ['/updateProfile', '/usersavedStore', '/addTocart', '/cart/changeQnt', '/cart/remove', '/cart/removeStore', '/cart/place-order', '/cart/verifyPayment']
+        let foundUrl = urls.find(url => url == req.url)
+        if (foundUrl) {
+            res.json({ loginErr: true })
+            console.log(req.url);
+        }
+        else res.redirect('/login')
     }
 }
 // home route for user 
@@ -230,7 +237,7 @@ router.get('/store/:storeId', async (req, res) => {
         res.render('user/storeinfo', { user, store, userData })
     } else res.json('404 not found')
 })
-//route for adding product to cart
+//route for adding product to cart 
 router.post('/addTocart', veryfyUser, (req, res) => {
     storeId == req.headers.referer.split('/')[4]
     let action = null
@@ -271,7 +278,7 @@ router.get('/cart', veryfyUser, async (req, res) => {
     res.header('Pragma', 'no-cache')
     res.render('user/cart', { user, cartItems, userData })
 })
-// route change the qnt of a product in cart 
+// route change the qnt of a product in cart  
 router.post('/cart/changeQnt', veryfyUser, (req, res) => {
     let reqData = req.body
     try {
@@ -362,6 +369,7 @@ router.post('/cart/place-order', veryfyUser, (req, res) => {
     }
 })
 // router to verify payment 
+
 router.post('/cart/verifyPayment', veryfyUser, (req, res) => {
     let data = req.body
     let order = cartItems[temp_order_id]

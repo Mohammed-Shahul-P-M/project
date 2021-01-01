@@ -123,6 +123,10 @@
                 prodId: id
             },
             success: (result => {
+                if (result.loginErr) {
+                    let x = confirm('you are not logged in want to in ?')
+                    if (x) location.replace('/login')
+                }
                 if (result.err) alert(result.err)
                 else showSnackbar('added to cart')
             })

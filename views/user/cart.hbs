@@ -301,9 +301,9 @@ sorry cart is empty
             e.target.value = e.target.min
         }
         let qnt = parseInt(e.target.value)
-        console.log(qnt)
         var inputStepvalue = document.getElementById(e.target.id).step;
         if (inputStepvalue == 50 && qnt % 50 != 0) qnt = (parseInt(qnt / 50) + 1) * 50
+        showLoading()
         $.ajax({
             url: '/cart/changeQnt',
             method: 'post',
@@ -312,6 +312,8 @@ sorry cart is empty
                 qnt: qnt
             },
             success: (res => {
+                hideLoading()
+                checkLogin(res)
                 if (res.err) alert('sorry can not change quantity please try again later')
                 else {
                     e.target.value = qnt
@@ -328,6 +330,7 @@ sorry cart is empty
         let inputStepvalue = parseInt(reqInput.step)
         let inputValue = parseInt(reqInput.value)
         function chageqnt(id, qnt) {
+            showLoading()
             $.ajax({
                 url: '/cart/changeQnt',
                 method: 'post',
@@ -336,6 +339,8 @@ sorry cart is empty
                     qnt: qnt
                 },
                 success: (res => {
+                    hideLoading()
+                    checkLogin(res)
                     if (res.err) alert('sorry error ? please check value or reload page ')
                     else reqInput.value = qnt
                     document.getElementById(storeId + '/' + prodId + 'idTotal').innerText = `₹ ${res.newCost}`
@@ -358,6 +363,7 @@ sorry cart is empty
     }
     // function to remove one item from the cart 
     function removeItem(n, m, id) {
+        showLoading()
         $.ajax({
             url: '/cart/remove',
             method: 'post',
@@ -366,6 +372,8 @@ sorry cart is empty
                 n: n
             },
             success: (res => {
+                hideLoading()
+                checkLogin(res)
                 if (res.totalItem == 0) location.reload()
                 if (res.err) alert('sorry some error occured please try again later')
                 else {
@@ -379,7 +387,6 @@ sorry cart is empty
         })
     }
     function enableInput() {
-        console.log('ok here')
         let allInput = document.querySelectorAll('input[type="number"]')
         allInput.forEach(i => {
             i.removeAttribute("disabled")
@@ -388,12 +395,15 @@ sorry cart is empty
     }
     function deleteOrder(id) {
         let r = confirm('are you sure to want delete ?')
+        showLoading()
         if (r) {
             $.ajax({
                 url: '/cart/removeStore',
                 method: 'post',
                 data: { Id: id },
                 success: (res => {
+                    hideLoading()
+                    checkLogin(res)
                     if (res.err) alert('sorry some error occured')
                     else location.reload()
                 })
@@ -403,12 +413,14 @@ sorry cart is empty
     // function to place order
     let mop = 'paypal'
     function placeOrder(id) {
-        console.log(id)
+        showLoading()
         $.ajax({
             url: '/cart/place-order',
             method: 'post',
             data: { id: id, mop: mop },
             success: (res => {
+                hideLoading()
+                checkLogin(res)
                 if (res.err) alert('sorry some error please try again later')
                 if (res.mop == 'cod') varifyPayment()
                 else {
@@ -449,11 +461,14 @@ sorry cart is empty
         rzp1.open();
     }
     function varifyPayment(data, orderdata) {
+        showLoading()
         $.ajax({
             url: '/cart/verifyPayment',
             method: 'post',
             data: { payment: data, order: orderdata },
             success: (res => {
+                hideLoading()
+                checkLogin(res)
                 if (res.err) alert('sorry error occured')
                 else location.replace('/order-success')
             })

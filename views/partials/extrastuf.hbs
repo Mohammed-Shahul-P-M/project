@@ -182,7 +182,7 @@
 <script>
     var userdata = JSON.parse('{{{json userData}}}')
     let cartCount = 0
-    userdata.cart.forEach(item => (item.products.length > 0) ? cartCount += 1 : cartCount += 0)
+    if (userdata && userdata.cart) userdata.cart.forEach(item => (item.products.length > 0) ? cartCount += 1 : cartCount += 0)
     if (cartCount > 0) {
         let reqDiv = document.getElementById('cartCount')
         reqDiv.innerText = cartCount
@@ -194,6 +194,7 @@
             url: '/usersavedStore',
             method: 'get',
             success: (data => {
+                checkLogin(data)
                 let sugessionStore = []
                 let sugessionDiv = document.getElementById('showStore')
                 if (data.length == 0) {

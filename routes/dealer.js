@@ -68,7 +68,7 @@ router.get('/dashboard', verifyDealer, async (req, res) => {
         dealerDbfunction.getAllOrdersHistory(req.session.dealerId)
     ])
     let allOrders = allOrderData[0]
-    let allOrdersHistory = allOrderData[1].reverse()
+    let allOrdersHistory = (allOrderData[1]) ? allOrderData[1].reverse() : null
     res.render('dealer/dashboard', { dealer: Dealer, allOrders, allOrdersHistory })
 })
 // route to edit dealer info  from dealer dashboard 

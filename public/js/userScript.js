@@ -1,10 +1,14 @@
-
+// function to check login 
+function checkLogin(response) {
+    if (response.loginErr) location.replace('/login')
+}
 /*function to load usefull datas*/
 let allStore = null
 $.ajax({
     url: '/getdata',
     method: 'get',
     success: (data => {
+        checkLogin(data)
         if (data) allStore = data
     }),
     error: (err => alert('sorry some error on the server'))

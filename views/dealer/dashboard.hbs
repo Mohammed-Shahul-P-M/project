@@ -427,11 +427,14 @@
         let days = Math.floor(timeInHours / 24)
         let hours = Math.floor(timeInHours - days * 24)
         let minuts = Math.floor((timeInHours % 1) * 60)
-        days = Format(days, 'day')
-        hours = Format(hours, 'hour')
-        minuts = Format(minuts, 'minut')
-        if (days.slice(0, 1) < 5) time.innerText = days + hours + minuts + ' ago'
+        if (days == 0 && hours == 0 && minuts == 0) time.innerText = 'just now'
+        else {
+            days = Format(days, 'day')
+            hours = Format(hours, 'hour')
+            minuts = Format(minuts, 'minut')
+            if (days.slice(0, 1) < 5) time.innerText = days + hours + minuts + ' ago'
 
+        }
     })
 
     function viewHistoryDetails(index) {

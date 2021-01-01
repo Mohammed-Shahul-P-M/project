@@ -110,9 +110,9 @@
     if (orderData.feedback) {
         document.querySelectorAll('input[type="radio"]').forEach(r => r.removeAttribute('onclick'))
         let allP = document.querySelectorAll('p')
-        allP[1].innerText = 'Thanks ! You have submitted your feedback'
-        allP[2].innerText = 'Your rating'
-        allP[3].innerText = 'your feedback'
+        allP[2].innerText = 'Thanks ! You have submitted your feedback'
+        allP[3].innerText = 'Your rating'
+        allP[4].innerText = 'your feedback'
         changeRadio(orderData.feedback.rating)
         document.querySelector('textarea').innerText = orderData.feedback.coment
         let SubmitButton = document.querySelector('input[type="submit"]')
