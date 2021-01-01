@@ -39,6 +39,7 @@ module.exports = {
     },
     // function to update userProfile 
     updateuserProfile: (data, userId) => {
+        data.balance = 0
         data.cart = []
         return new Promise((resolve, reject) => {
             db.get().collection(USER_COLLECTION).findOneAndUpdate(
@@ -194,9 +195,30 @@ module.exports = {
     },
     getOrderHistory: (id) => {
         return new Promise(async (resolve, reject) => {
-            let allOrderHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find({}).toArray()
+            let allOrderHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find({ 'user.id': `${id}` }).toArray()
             if (allOrderHistory) resolve(allOrderHistory)
             else resolve(null)
+        })
+    },
+    // function to get order date 
+    getOrderData: (userId, location, orderId) => {
+
+        return new Promise(async (resolve, reject) => {
+            let COLLECTION = ORDERS_COLLECTION
+            if (location == 'oh') COLLECTION = ORDERhISTORY_COLLECTION
+            let data = await db.get().collection(COLLECTION).findOne({ _id: ObjectId(orderId), 'user.id': `${userId}` })
+            if (data) resolve(data)
+            else resolve(null)
+        })
+    },
+    // function to update feedback of an order 
+    updateFeedback: (feedback, id, userid) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(ORDERhISTORY_COLLECTION).findOneAndUpdate(
+                { _id: ObjectId(id), 'user.id': `${userid}`, feedback: null },
+                { $set: { feedback } }
+            ).then(res => resolve(res.value))
+                .catch(err => reject(err))
         })
     }
 }

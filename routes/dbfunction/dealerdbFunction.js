@@ -2,6 +2,7 @@ const db = require('../../config/connection')
 const DEALER_COLLECTION = 'dealers'
 const ORDERS_COLLECTION = 'orders'
 const ORDERhISTORY_COLLECTION = 'orderHistory'
+const USER_COLLECTION = 'users'
 const bcrypt = require('bcrypt')
 const { ObjectId } = require('mongodb')
 
@@ -170,7 +171,7 @@ module.exports = {
     // function to get all order history 
     getAllOrdersHistory: (id) => {
         return new Promise(async (resolve, reject) => {
-            const allOrdersHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find().toArray()
+            const allOrdersHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find({ storeId: ObjectId(id) }).toArray()
             if (allOrdersHistory && allOrdersHistory.length > 0) resolve(allOrdersHistory)
             else resolve(null)
         })
@@ -206,19 +207,36 @@ module.exports = {
                     delete i.status
                     order.cartItems[index] = i
                 })
-                console.log('order : ', order);
                 let allPromis = await Promise.all([
                     db.get().collection(ORDERS_COLLECTION).findOneAndDelete({ _id: ObjectId(order._id) }, { returnOriginal: false }),
                     db.get().collection(ORDERhISTORY_COLLECTION).insertOne(order)
                 ])
-                console.log(allPromis[0]);
-                console.log(allPromis[1].ops[0]);
                 resolve('success')
 
             } catch (err) {
                 console.log(err);
                 resolve(null)
             }
+        })
+    },
+    // function to update user balance 
+    updateUserBalance: (userId, balance) => {
+        return new Promise((resolve, reject) => {
+            db.get().collection(USER_COLLECTION).findOneAndUpdate(
+                { _id: ObjectId(userId) }, { $inc: { balance: balance } },
+                { returnOriginal: false }
+            ).then(value => resolve(value.value))
+                .catch(err => reject(err))
+        })
+    },
+    // function to get order date 
+    getOrderData: (storeId, location, orderId) => {
+        return new Promise(async (resolve, reject) => {
+            let COLLECTION = ORDERS_COLLECTION
+            if (location == 'oh') COLLECTION = ORDERhISTORY_COLLECTION
+            let data = await db.get().collection(COLLECTION).findOne({ _id: ObjectId(orderId), storeId: ObjectId(storeId) })
+            if (data) resolve(data)
+            else resolve(null)
         })
     }
 }

@@ -1,0 +1,123 @@
+<style>
+    form {
+        width: 90%;
+        margin-top: 2%;
+        margin-left: 50%;
+        transform: translateX(-50%);
+        max-width: 300px;
+        border-radius: 5px;
+        border: 2px solid rgb(4, 179, 4);
+        padding: 20px;
+    }
+
+    p {
+        font-weight: 550;
+    }
+
+    p.heading {
+        font-size: 1.3rem;
+        margin-top: 40px;
+    }
+
+    body {
+        margin: 20px;
+        text-align: center;
+        font-family: sans-serif;
+        background-color: rgb(239, 245, 244);
+    }
+
+    input[type='radio'] {
+        display: none;
+    }
+
+    nav {
+        display: none;
+    }
+
+    .radio {
+        margin: 10px;
+        color: rgb(4, 179, 4);
+        cursor: pointer;
+        font-weight: 700;
+    }
+
+    input[type='submit'] {
+        padding: 5px 20px;
+        background-color: rgb(3, 10, 3);
+        border-radius: 4px;
+        outline: none;
+        border: none;
+        color: rgb(52, 250, 52);
+        margin: 10px;
+        margin-top: 20px;
+        font-weight: 550;
+        cursor: pointer;
+    }
+
+    textarea {
+        border-radius: 4px;
+        padding: 10px;
+    }
+
+    p.heading span {
+        font-size: 0.9rem;
+        color: rgb(5, 5, 203);
+        position: absolute;
+        top: 10px;
+        left: 10%;
+
+    }
+</style>
+<p class="heading">Feedback <span>order_id :{{orderData._id}}</span></p>
+<p style="color: red;">We would like your feedback to improve our service</p>
+<form action="/feedback" method="post">
+    <input type="hidden" name="id" value="{{orderData._id}}">
+    <p>Please rate the order</p>
+    <label class="radio" for="rating1">☆</label>
+    <input onclick="changeRadio(1)" value="1" type="radio" id="rating1" name="rating" required>
+    <label class="radio" for="rating2">☆</label>
+    <input onclick="changeRadio(2)" value="2" type="radio" id="rating2" name="rating" required>
+    <label class="radio" for="rating3">☆</label>
+    <input onclick="changeRadio(3)" value="3" type="radio" id="rating3" name="rating" required>
+    <label class="radio" for="rating4">☆</label>
+    <input onclick="changeRadio(4)" value="4" type="radio" id="rating4" name="rating" required>
+    <label class="radio" for="rating5">☆</label>
+    <input onclick="changeRadio(5)" value="5" type="radio" id="rating5" name="rating" required>
+    <p>please write your feedback below</p>
+    <textarea required name="feedback" id="feedback" cols="30" rows="3"></textarea>
+    <input type="submit">
+</form>
+
+<script>
+    function changeRadio(rating) {
+        let allRadio = document.querySelectorAll('.radio')
+        if (rating < 5) allRadio.forEach(r => r.style.color = 'rgb(196, 129, 5)')
+        if (rating < 3) allRadio.forEach(r => r.style.color = 'red')
+        if (rating == 5) allRadio.forEach(r => r.style.color = 'rgb(4, 179, 4)')
+        allRadio.forEach(radio => radio.innerText = '☆')
+        let a = 0
+        while (a < rating) {
+            let reqRadioButton = allRadio[a]
+            reqRadioButton.innerText = '★'
+            a++
+        }
+    }
+    function goHome(e) {
+        e.preventDefault()
+        location.replace('/')
+    }
+    let orderData = JSON.parse('{{{json orderData}}}')
+    if (orderData.feedback) {
+        document.querySelectorAll('input[type="radio"]').forEach(r => r.removeAttribute('onclick'))
+        let allP = document.querySelectorAll('p')
+        allP[1].innerText = 'Thanks ! You have submitted your feedback'
+        allP[2].innerText = 'Your rating'
+        allP[3].innerText = 'your feedback'
+        changeRadio(orderData.feedback.rating)
+        document.querySelector('textarea').innerText = orderData.feedback.coment
+        let SubmitButton = document.querySelector('input[type="submit"]')
+        SubmitButton.value = 'Go Home'
+        SubmitButton.setAttribute('onclick', 'goHome(event)')
+    }
+
+</script>

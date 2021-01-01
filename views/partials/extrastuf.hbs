@@ -163,8 +163,13 @@
     <p onclick="document.getElementById('dropDownmenu').style.display='none'" class="closeBtn">x</p>
     {{#if userData}}
     <p class="name">{{userData.name}}</p>
+    <p>Balance <span style=" background-color: black; color: chartreuse;padding: 4px 7px;border-radius: 4px;">₹
+            {{userData.balance}}</span>
+    </p>
     <p onclick="location.replace('/profile')" class="profile">profile</p>
-    <p onclick="showSavedStore()" class="srlist">Saved stores </p>
+    <p onclick="showSavedStore()" class="srlist">Saved stores <span
+            style="background-color: red;padding: 3px 6px; border-radius: 5px;"
+            class="count">{{userData.cart.length}}</span></p>
     <p onclick="location.replace('/logout')" class="btn">Logout</p>
     {{else}}
     <p onclick="location.replace('/login')" class="btn">Login</p>

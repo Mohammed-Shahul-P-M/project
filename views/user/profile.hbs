@@ -97,10 +97,10 @@
     <i class="fas fa-user"> Hi welcome {{userData.name}}</i>
 </div>
 <div class="menu">
-    <a href="3">Personal Info</a>
+    <a href="#">Personal Info</a>
     <a onclick="showOrderContainer()" href="#">Orders</a>
-    <a onclick="showOrderContainer()" href="#">Order History</a>
-    <a href="3">Store list</a>
+    <a onclick="showOrderContainer('orderhistory-container')" href="#">Order History</a>
+    <a href="#">Store list</a>
 </div>
 <form id="update-user-profile" action="" class="" method="post">
     <p class="heading">Personal Information <span onclick="showEditForm(event)">Edit</span></p>
@@ -253,35 +253,257 @@
         top: 10px;
         cursor: pointer;
     }
+
+    .container i {
+        color: blue;
+        position: absolute;
+        left: 40%;
+        cursor: pointer;
+        font-size: 0.6rem;
+        font-weight: 550;
+    }
+
+    i.fa-comments {
+        color: rgb(15, 1, 1);
+        left: 92%;
+        top: 70%;
+        font-size: 0.8rem;
+    }
 </style>
 <div id="order-container" class="container">
     <div class="orders">
-        <p class="btn">Order History <span onclick="closeOrderContainer()" class="closeBtn">x</span></p>
+        <p class="btn">Orders<span onclick="closeOrderContainer()" class="closeBtn">x</span></p>
         <div class="order-content">
             {{#each orders}}
             <div class="each-order">
+                <i class="fas fa-download" onclick="location.replace('/download/order/{{this._id}}')"> Download</i>
                 <p class="orderId">order_id : {{this._id}}</p>
                 <p class="order-total">₹ {{this.cartTotal}}</p>
                 <p class="date">{{this.date}}</p>
                 <p class="Titems">{{this.TotalItem}} Items</p>
                 <p onclick="location.replace('/store/{{this.storeId}}')" class="store">{{this.storeName}}</p>
-                <p class="track ">Status <span class="btn">{{this.status}}</span></p>
+                <p class="track ">Status <span class="btn">{{this.status}}</span><span class="statusview" style="margin-left: 10px;
+                         cursor: pointer;
+                         background-color: blue;
+                         color: white;
+                        " onclick="showStatus('O',{{@index}})">?</span></p>
                 {{#each this.cartItems}}
                 {{this.name}} <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹ {{X this.qnt
                     this.price}}</span><br>
                 {{/each}}
             </div>
             {{/each}}
-            {{#each orderHistory}}
+        </div>
+    </div>
+</div>
+<div id="orderhistory-container" class="container">
+    <div class="orders">
+        <p class="btn">Order History <span onclick="closeOrderContainer('orderhistory-container')"
+                class="closeBtn">x</span></p>
+        <div class="order-content">
+            {{#each ordersHistory}}
             <div class="each-order">
-                order
+                {{#ifEq this.status 'delivered'}}
+                <i onclick="location.replace('/feedback/{{this._id}}')" class="far fa-comments"
+                    style="color: {{#if this.feedback}}green{{/if}};"></i>
+                {{/ifEq}}
+                <i class="fas fa-download" onclick="location.replace('/download/orderhistory/{{this._id}}')">
+                    Download</i>
+                <p class="orderId">order_id : {{this._id}}</p>
+                <p class="order-total">₹ {{this.cartTotal}}</p>
+                <p class="date">{{this.date}}</p>
+                <p class="Titems">{{this.TotalItem}} Items</p>
+                <p onclick="location.replace('/store/{{this.storeId}}')" class="store">{{this.storeName}}</p>
+                <p class="track ">Status <span class="btn">{{this.status}}</span><span class="statusview" style="margin-left: 10px;
+                         cursor: pointer;
+                         background-color: blue;
+                         color: white;
+                        " onclick="showStatus('H',{{@index}})">?</span></p>
+                {{#each this.cartItems}}
+                {{this.name}} <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹ {{X this.qnt
+                    this.price}}</span><br>
+                {{/each}}
             </div>
             {{/each}}
         </div>
     </div>
 </div>
-<script>
+<style>
+    #progress-container {
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.816);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        visibility: hidden;
+    }
 
+    #progress-div {
+        position: fixed;
+        left: 50%;
+        top: 55%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        width: 280px;
+        height: 370px;
+        z-index: 2;
+        border-radius: 4px;
+    }
+
+    #progress-div .closeBtn {
+        text-align: right;
+        margin: 10px;
+        font-weight: 550;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+
+    #progress-div .progresbar {
+        height: 60%;
+        background-color: rgb(13, 172, 23);
+        width: 2px;
+        position: absolute;
+        left: 26px;
+        top: 22%;
+    }
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        position: absolute;
+        font-weight: 550;
+        font-size: 0.8rem;
+    }
+
+    li:nth-child(1) {
+        top: 20%;
+    }
+
+    li:nth-child(2) {
+        top: 40%;
+    }
+
+    li:nth-child(3) {
+        top: 60%;
+    }
+
+    li:nth-child(4) {
+        top: 80%;
+    }
+
+    #progress-div .dot {
+        background-color: gray;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        display: inline-block;
+        margin-left: -18px;
+        margin-right: 30px;
+    }
+
+    .confirm {
+        background-color: rgb(9, 149, 19) !important;
+    }
+
+    .confirm-t {
+        color: rgb(9, 149, 19);
+    }
+
+    .about-confirm {
+        background-color: white !important;
+        border: 2px solid rgb(9, 149, 19);
+        margin-left: -20px !important;
+    }
+
+    #progress-div i {
+        margin-left: -10px;
+        margin-right: 10px;
+        font-weight: 550;
+        color: black;
+    }
+
+    #progress-div p.heading {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 1.1rem;
+        color: blue;
+    }
+
+    #progress-div p.err {
+        font-weight: 550;
+        font-size: 0.7rem;
+        color: rgb(231, 5, 5);
+        position: absolute;
+        top: 25%;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+</style>
+<div id="progress-container">
+    <div id="progress-div">
+        <p onclick="document.getElementById('progress-container').style.visibility='hidden'" class="closeBtn">X</p>
+        <p class="heading">Track order</p>
+        <p class="err"></p>
+        <div class="progresbar"></div>
+        <ul>
+        </ul>
+    </div>
+</div>
+<script>
+    let allOrder = JSON.parse('{{{json orders}}}')
+    let allHistory = JSON.parse('{{{json ordersHistory}}}')
+    function showStatus(section, index) {
+        let orderr = null
+
+        if (section == 'O') orderr = allOrder[index]
+        else if (section == 'H') orderr = allHistory[index]
+        else alert('fuck you')
+        let reqDiv = document.getElementById('progress-container')
+        reqDiv.style.visibility = 'visible'
+        let status = orderr.status
+        let number = 0
+        if (status == 'rejected') {
+            reqDiv.querySelector('p.err').innerText = 'Sorry your order is rejected. debitted amount will be credited to your balance'
+        } else {
+            if (status == 'confirmed') number = 1
+            if (status == 'out for delivery') number = 2
+            if (status == 'delivered') number = 3
+            if (status == 'delayed') number = 0
+            if (status == 'pending') reqDiv.querySelector('.err').innerText = 'Order  pending'
+            else reqDiv.querySelector('.err').innerText = ''
+            let a = 0
+            reqDiv.querySelector('ul').innerHTML = `
+            <li class="li0">
+                <div class="dot confirm div0"></div>
+              <i class="far fa-file-alt"></i> Order placed
+            </li>
+            <li class="li1">
+                <div class="dot div1"></div>
+                <i class="far fa-check-circle"></i> Order confirmed
+            </li>
+            <li class="li2">
+                <div class="dot div2"></div>
+                <i class="fas fa-shopping-cart"></i> Out for delivery
+            </li>
+            <li class="li3">
+                <div class="dot div3"></div>
+                <i class="fas fa-truck"></i> Order delivered
+            </li>
+        `
+
+            reqDiv.querySelector('.progresbar').style.height = 20 * number + '%'
+            while (a <= number) {
+                reqDiv.querySelector('.div' + a).classList.add('confirm')
+                a++
+            }
+        }
+    }
     function showEditForm(e) {
         let innerText = e.target.innerText
         innerText = (innerText == 'Edit') ? 'cancel' : 'Edit'
@@ -313,10 +535,14 @@
             })
         })
     })
-    function showOrderContainer() {
-        document.getElementById('order-container').style.visibility = 'visible'
+    function showOrderContainer(id) {
+        let divId = 'order-container'
+        if (id) divId = id
+        document.getElementById(divId).style.visibility = 'visible'
     }
-    function closeOrderContainer() {
-        document.getElementById('order-container').style.visibility = 'hidden'
+    function closeOrderContainer(id) {
+        let divId = 'order-container'
+        if (id) divId = id
+        document.getElementById(divId).style.visibility = 'hidden'
     }
 </script>

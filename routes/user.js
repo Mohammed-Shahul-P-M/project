@@ -3,6 +3,7 @@ const https = require('https')
 const quieryString = require('querystring')
 const Razorpay = require('razorpay')
 const crypto = require('crypto')
+const PDFDocument = require('pdfkit');
 const userDbfunction = require('./dbfunction/userdbfunction')
 const user = true
 let userData = null
@@ -17,13 +18,13 @@ let instance = new Razorpay({
 function veryfyUser(req, res, next) {
     if (req.session.userId) next()
     else {
-        userDbfunction.dologin({ phone: '9605020766', password: '1234' }).then(user => {
-            req.session.userId = user._id
-            userData = user
-            next()
-        })
+        // userDbfunction.dologin({ phone: '9605020766', password: '1234' }).then(user => {
+        //     req.session.userId = user._id
+        //     userData = user
+        //     next()
+        // })
 
-        //res.redirect('/login')
+        res.redirect('/login')
     }
 }
 // home route for user 
@@ -61,8 +62,89 @@ router.get('/profile', veryfyUser, async (req, res) => {
         userDbfunction.getOrderHistory(req.session.userId)
     ])
     let orders = (allOrder[0].length > 0) ? allOrder[0] : null
-    let ordersHistory = (allOrder[1].length > 0) ? allOrder[1] : null
+    let ordersHistory = (allOrder[1].length > 0) ? allOrder[1].reverse() : null
     res.render('user/profile', { user, userData, orders, ordersHistory })
+})
+// route to give feedback for order 
+router.get('/feedback/:id', veryfyUser, async (req, res) => {
+    if (req.params.id.length == 24) {
+        let orderData = await userDbfunction.getOrderData(req.session.userId, 'oh', req.params.id)
+        if (orderData && orderData.status == 'delivered') res.render('user/feedback', { orderData })
+        else res.json('404 error ')
+    }
+    else res.json('404 error ')
+})
+router.post('/feedback', veryfyUser, (req, res) => {
+    try {
+        let feedback = {
+            rating: parseInt(req.body.rating),
+            coment: req.body.feedback
+        }
+        userDbfunction.updateFeedback(feedback, req.body.id, req.session.userId)
+            // .then(res => console.log(res))
+            .then(result => (result._id) ? res.redirect('/feedback/' + result._id) : res.json('sorry some Error occured'))
+            .catch(err => res.json('sorry error occured'))
+    } catch (error) {
+        res.json('sorry some error occured please try again later')
+    }
+})
+// route to download order deatails 
+router.get('/download/:location/:id', veryfyUser, async (req, res) => {
+    if (req.params.location == 'order' || 'orderhistory') {
+        location = 'o'
+        if (req.params.location == 'orderhistory') location = 'oh'
+        let data = await userDbfunction.getOrderData(req.session.userId, location, req.params.id)
+        if (data) {
+            var myDoc = new PDFDocument({ bufferPages: true });
+
+            let buffers = [];
+            myDoc.on('data', buffers.push.bind(buffers));
+            myDoc.on('end', () => {
+
+                let pdfData = Buffer.concat(buffers);
+                res.writeHead(200, {
+                    'Content-Length': Buffer.byteLength(pdfData),
+                    'Content-Type': 'application/pdf',
+                    'Content-disposition': 'attachment;filename=details.pdf',
+                })
+                    .end(pdfData);
+
+            });
+            let content = `
+                       Order Details
+
+                       Order_id             :   ${data._id} 
+                       Store_id             :   ${data.storeId}
+                       store name           :   ${data.storeName}
+                       Total amont          :   ${data.cartTotal} 
+                       Total items          :   ${data.TotalItem}
+                       Mode of payment      :   ${data.mop}
+                       ordered on           :   ${data.date}
+                       Delivered on         :   ${data.finishedDate ? data.finishedDate : 'not available'}
+                       Custemer name        :   ${data.user.name}
+                       Customer id          :   ${data.user.id}
+                       Customer Address     :   ${data.user.address + ' ph ' + data.user.phone}
+                       Order status         :   ${data.status} 
+                       
+                       Product Details      
+                       `
+            data.cartItems.forEach(d => {
+                let prodDetails = `
+                       ${d.name} (Rs. ${d.price}/${d.unit})  x  ${d.qnt}   =  ${d.price * d.qnt}
+                       `
+                content += prodDetails
+            })
+            content += `
+            
+            This is system generated document `
+            myDoc.font('Times-Roman')
+                .fontSize(12)
+                .text(`${content}`);
+            myDoc.end();
+        } else res.json('404 Not fuond')
+
+    }
+    else res.json('404 Not found')
 })
 // route to update 
 router.post('/updateProfile', veryfyUser, (req, res) => {

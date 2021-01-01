@@ -2,6 +2,7 @@ const router = require('express').Router()
 const dealerDbfunction = require('./dbfunction/dealerdbFunction')
 const fs = require('fs')
 const path = require('path')
+const PDFDocument = require('pdfkit');
 var Dealer = null
 let dealerRequestedUrl = '/dealer/dashboard'
 let errmsg = null
@@ -18,16 +19,16 @@ async function verifyDealer(req, res, next) {
         next()
     }
     else {
-        dealerDbfunction.doLogin({ email: 'abdu@gmail.com', password: '1234' }).then(res => {
-            req.session.dealerId = res._id
-            Dealer = res
-            next()
-        })
-        // if (req.url == '/dashboard') {
-        //     errmsg = 'Sorry session is timed Out'
-        //     dealerRequestedUrl = '/dealer' + req.url
-        //     res.redirect('/dealer')
-        // } else res.json({ loginErr: 'Session timed out' })
+        // dealerDbfunction.doLogin({ email: 'abdu@gmail.com', password: '1234' }).then(res => {
+        //     req.session.dealerId = res._id
+        //     Dealer = res
+        //     next()
+        // })
+        if (req.url == '/dashboard') {
+            errmsg = 'Sorry session is timed Out'
+            dealerRequestedUrl = '/dealer' + req.url
+            res.redirect('/dealer')
+        } else res.json({ loginErr: 'Session timed out' })
 
     }
 }
@@ -67,7 +68,7 @@ router.get('/dashboard', verifyDealer, async (req, res) => {
         dealerDbfunction.getAllOrdersHistory(req.session.dealerId)
     ])
     let allOrders = allOrderData[0]
-    let allOrdersHistory = allOrderData[1]
+    let allOrdersHistory = allOrderData[1].reverse()
     res.render('dealer/dashboard', { dealer: Dealer, allOrders, allOrdersHistory })
 })
 // route to edit dealer info  from dealer dashboard 
@@ -240,16 +241,66 @@ router.post('/changeOrderStatus', verifyDealer, (req, res) => {
                     else res.json({ err: true })
                 })
             } else res.json('ok')
+            if (req.body.status == 'rejected' && result.mop == 'online') {
+                dealerDbfunction.updateUserBalance(result.user.id, result.cartTotal)
+                    .then(data => Dealer = data).catch(err => console.error(err))
+            }
         } else res.json({ err: true })
     })
 
 })
-let vr = 'hello'
-router.get('/demo', (req, res) => {
-    res.json(vr)
+// function to print 
+router.get('/download/:location/:id', verifyDealer, async (req, res) => {
+    if (req.params.location == 'order' || 'orderhistory') {
+        location = 'o'
+        if (req.params.location == 'orderhistory') location = 'oh'
+        let data = await dealerDbfunction.getOrderData(req.session.dealerId, location, req.params.id)
+        if (data) {
+            var myDoc = new PDFDocument({ bufferPages: true });
+
+            let buffers = [];
+            myDoc.on('data', buffers.push.bind(buffers));
+            myDoc.on('end', () => {
+
+                let pdfData = Buffer.concat(buffers);
+                res.writeHead(200, {
+                    'Content-Length': Buffer.byteLength(pdfData),
+                    'Content-Type': 'application/pdf',
+                    'Content-disposition': 'attachment;filename=details.pdf',
+                })
+                    .end(pdfData);
+
+            });
+            let content = `
+                       Order_id             :   ${data._id} 
+                       Store_id             :   ${data.storeId}
+                       store name           :   ${data.storeName}
+                       Total amont          :   ${data.cartTotal} 
+                       Total items          :   ${data.TotalItem}
+                       Mode of payment      :   ${data.mop}
+                       ordered on           :   ${data.date}
+                       Delivered on         :   ${data.finishedDate ? data.finishedDate : 'not available'}
+                       Custemer name        :   ${data.user.name}
+                       Customer id          :   ${data.user.id}
+                       Customer Address     :   ${data.user.address + ' ph ' + data.user.phone}
+                       Order status         :   ${data.status} 
+                       
+                       Product Details      
+                       `
+            data.cartItems.forEach(d => {
+                let prodDetails = `
+                       ${d.name} (Rs. ${d.price}/${d.unit})  x  ${d.qnt}   =  ${d.price * d.qnt}
+                       `
+                content += prodDetails
+            })
+            myDoc.font('Times-Roman')
+                .fontSize(12)
+                .text(`${content}`);
+            myDoc.end();
+        } else res.json('404 Not fuond')
+
+    }
+    else res.json('404 Not found')
 })
-router.get('/demoo', (req, res) => {
-    vr = 'hai'
-    res.json(vr)
-})
+
 module.exports = router

@@ -114,12 +114,13 @@ font-family: 'JetBrains Mono', monospace;
 .ordershistory-tab .history .order>div.time{
 top: 12px;
 border-radius: 4px;
-left: 100px;
+left: 70px;
 font-size: 0.7rem;
 font-weight: 300;
 background-color: rgb(175, 199, 247);
 padding: 3px 5px;
 }
+
 .orders-tab .orders .order>div.status,
 .ordershistory-tab .history .order>div.feedback{
 top: 15px;
@@ -177,6 +178,22 @@ color: white;
 outline: none;
 border: none;
 padding: 5px 8px;
+}
+.mop{
+    left: 45%;
+    top: 60px;
+    font-size: 0.7rem !important;
+    font-weight: 550;
+    text-align: center;
+    background-color: rgb(199, 243, 177);
+    padding: 0 10px;
+    border-radius: 4px;
+}
+.mop p {
+    margin: 5px;
+}
+.mop p.content{
+    color: rgb(127, 5, 121);
 }
 /* ********************************************** */
 /* _______css for user section __________ */
@@ -594,7 +611,7 @@ padding: 6px 25px;
 width: 150px;
 font-size: 1.1rem;
 color: white;
-background-color: rgb(15, 79, 5);
+background-color: rgb(16, 12, 150);
 border-radius: 3px;
 border: none;
 outline: none;
@@ -723,4 +740,109 @@ margin: 0 10px;
     top: 45%;
     left: 50%;
     transform: translate(-50%,-60%);
+}
+
+#ordershistory-tab .status{
+    text-align: center;
+    font-size: 0.6rem !important;
+    width: 170px;
+    font-weight: 550;
+    padding-bottom: 7px;
+    left: 55%;
+}
+.ordershistory-tab .history .order>div.view{
+    left: 85%;
+}
+#ordershistory-tab .status p{
+ margin: 0;
+ overflow: hidden;
+ padding:0;
+ padding-top: 5px;
+}
+ #ordershistory-tab .feedMessage{
+     position: absolute;
+     width: 200px;
+     background-color: rgb(209, 206, 206);
+     padding: 10px;
+     border-radius: 4px;
+     border:  2px solid rgb(68, 15, 2);
+     z-index: 2;
+     text-align: center;
+     font-size: 0.7rem;
+     font-weight: 550;
+     color: blue;
+     visibility: hidden;
+ }
+ #ordershistory-tab .feedMessage .closebtn{
+     position: absolute;
+     right: -10px;
+     top: -10px;
+     font-size: 1rem;
+     color: white;
+     border-radius: 50%;
+     background-color: rgb(3, 10, 2);
+     border: 2px solid white;
+     padding: 0 4px;
+ }
+ #order-details .table{
+     text-align: center;
+     width: 50%;
+     max-height: 300px;
+     overflow-y: scroll;
+     margin: 20px;
+     margin-top: 50px;
+     border-radius: 5px;
+ } 
+
+ #order-details table{
+     width: 90%;
+     text-align: center;
+     border-collapse: collapse;
+     margin: auto;
+     font-size: 0.8rem;
+     margin-bottom: 20px;
+ }
+ thead , tr,table,.table{
+    border: 1px solid gray;
+ }
+ th, td{
+     padding: 7px 0;
+     
+ }
+ td{
+     font-size: 0.6rem;
+     font-weight: 550;
+ }
+ #order-details  p.heading {
+     font-weight: 550;
+ }
+ #history-totalsection{
+     left: 20px;
+     top: 82%;
+     height: 70px;
+     width: 50%;
+     font-size: 0.75rem;
+     padding: 0;
+     background-color: rgb(178, 216, 178);
+ }
+ #history-totalsection p{
+    margin-left: 40px;
+}
+#history-totalsection p span{
+    margin-left: 130px;
+    color: rgb(2, 68, 133);
+    text-align: center;
+}
+#order-details .status {
+    background-color: rgb(178, 216, 178);
+    left: 68%;
+    width: 200px;
+    top: 230px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 550;
+}
+.fa-map-marker-alt {
+    color: blue;
 }
