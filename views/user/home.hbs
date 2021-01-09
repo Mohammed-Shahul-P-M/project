@@ -1,34 +1,113 @@
-<div class="display-message">
-    <p class="heading">Order from nearest super market it is easy</p>
-    <p class="content">Order fresh vegitabls,fruits, and grocery items from your nearest
-        store <br> with greate discount and proper management
-    </p>
-    <button>Order now</button>
-</div>
-<div class="shop-by-catogory">
-    <div class="card">
-        <img src="images/apple.jpg" alt="">
-        <p class="topic">Fruits</p>
-        <a href="">shop now</a>
+<style>
+    .display-message img {
+        height: 110px;
+    }
+
+    .display-message {
+        min-height: 250px;
+        max-height: 250px;
+        margin-bottom: 20px;
+    }
+
+    #allStore {
+        min-height: 300px;
+        max-height: 600px;
+        overflow-y: scroll;
+    }
+
+    nav input[type='search'] {
+        display: none;
+    }
+
+    nav {
+        height: 50px !important;
+    }
+
+    @media (max-width:400px) {
+        body {
+            margin-top: 10px;
+        }
+    }
+</style>
+<div class="sildebar">
+    <div class="display-message mySlides">
+        <p style="margin: 30px;" class="heading">Order from nearest super market it is easy</p>
+        <p class="content">Order fresh vegitabls,fruits, and grocery items from your nearest
+            store <br> with greate discount and proper management
+        </p>
+        <button>Order now</button>
     </div>
-    <div class="card">
-        <img src="/images/vegitable.jpeg" alt="">
-        <p class="topic">Vegitables</p>
-        <a href="">shop now</a>
+    <div style="background-color: rgb(161, 187, 187);" class="mySlides display-message">
+        <p class="heading">Fruits & vegitables</p>
+        <img src="images/frVeg.jpeg" alt="">
+        <p class="content">Order fresh vegitabls,fruits, and grocery items from your nearest
+            store with greate discount and proper management
+        </p>
     </div>
-    <div class="card">
+    <div style="background-color: rgb(171, 247, 150);" class="mySlides display-message">
+        <p class="heading">Dry fruits</p>
+        <img src="images/dry-f.jpeg" alt="">
+        <p class="content">Order high quality Dry fruits, and grocery items from your nearest
+            store <br> with greate discount and proper management
+        </p>
+    </div>
+    <div style="background-color: rgb(252, 211, 101);" class="mySlides display-message">
+        <p class="heading">Personal care</p>
+        <img src="images/p-care.jpg" alt="">
+        <p class="content">Order high quality personal care , and grocery items from your nearest
+            store <br> with greate discount and proper management
+        </p>
+    </div>
+    <div style="background-color: rgb(253, 135, 127);" class="mySlides display-message">
+        <p class="heading">varities of rices</p>
         <img src="images/rices.jpg" alt="">
-        <p class="topic">Rices</p>
-        <a href="">shop now</a>
-    </div>
-    <div class="card">
-        <img src="/images/p-care.jpg" alt="">
-        <p class="topic">Personal care</p>
-        <a href="">shop now</a>
-    </div>
-    <div class="card">
-        <img src="/images/dry-f.jpeg" alt="">
-        <p class="topic">Dry fruits</p>
-        <a href="">shop now</a>
+        <p class="content">Order high quality, and other grocery items from your nearest
+            store <br> with greate discount and proper management
+        </p>
     </div>
 </div>
+<input placeholder="Search store" oninput="findStore(this.value)" onclick="window.scrollBy(0, -290)"
+    style="margin-bottom: 10px; border:2px solid rgb(53, 193, 53); outline: none;padding: 4px 8px; text-align: center; border-radius: 24px;margin-left: 50%;transform: translateX(-50%);"
+    type="search">
+<div id="allStore" class="shop-by-catogory">
+    {{#each allStore}}
+    <div class="card storecard">
+        <img src="images/store.png" alt="">
+        <p class="topic">{{this.store}}</p>
+        <p style="font-size: 0.7rem; color: darkred; font-weight: 550;" class="location">{{this.location}}</p>
+        <a href="/store/{{this._id}}">shop now</a>
+    </div>
+    {{/each}}
+</div>
+<script>
+    let allStoreDiv = document.getElementById('allStore')
+    let startingDivContent = allStoreDiv.innerHTML
+    let allstore = document.querySelectorAll('.storecard')
+    function findStore(value) {
+        allStoreDiv.innerHTML = ''
+        let foundStore = []
+        if (value === '') allStoreDiv.innerHTML = startingDivContent
+        else {
+            allstore.forEach(store => {
+                let name = store.querySelector('p.topic').innerText
+                let location = store.querySelector('p.location').innerText
+                if (value.toLowerCase() === name.toLowerCase().slice(0, value.length)) allStoreDiv.append(store)
+                else if (value.toLowerCase() === location.toLowerCase().slice(0, value.length)) allStoreDiv.append(store)
+            })
+        }
+    }
+    var slideIndex = 0;
+    carousel();
+
+    function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        slideIndex++;
+        if (slideIndex > x.length) { slideIndex = 1 }
+        x[slideIndex - 1].style.display = "block";
+        setTimeout(carousel, 7000); // Change image every 2 seconds
+    }
+</script>

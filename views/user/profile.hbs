@@ -2,16 +2,14 @@
     body {
         padding-bottom: 20px;
         min-height: 100vh;
-        background-color: rgba(15, 15, 15, 0.939);
     }
 
     .menu,
     .usercard,
     #update-user-profile {
         position: absolute;
-        background-color: rgba(49, 5, 5, 0.707);
-        box-shadow: 2px 2px rgb(9, 247, 64);
-        color: white;
+        box-shadow: 0 0 1px 1px teal;
+        background-color: rgb(226, 229, 233);
     }
 
     #update-user-profile {
@@ -52,6 +50,13 @@
         border-radius: 4px;
     }
 
+    .menu a span {
+        padding: 0 5px;
+        background-color: rgb(238, 24, 9);
+        color: white;
+        border-radius: 4px;
+    }
+
     .usercard {
         height: 30px;
 
@@ -68,7 +73,7 @@
     .menu a {
         font-weight: 550;
         font-size: 0.9rem;
-        color: turquoise;
+        color: rgb(135, 34, 9);
         display: block;
         margin: 20px 5px;
     }
@@ -89,6 +94,49 @@
         visibility: hidden;
         cursor: pointer;
     }
+
+    @media screen and (max-width:600px) {
+
+        .usercard,
+        .menu,
+        #update-user-profile {
+            position: absolute;
+            left: 0;
+            margin-left: 5%;
+            width: 80%;
+            box-shadow: none;
+            background-color: rgb(215, 225, 233);
+        }
+
+        .usercard {
+            top: 130px;
+            width: 85%;
+            box-shadow: none;
+        }
+
+        .menu {
+            top: 180px;
+            width: 85%;
+            text-align: center;
+        }
+
+        .menu a {
+            display: inline-block;
+            margin: auto 30px;
+        }
+
+        .menu a:first-child {
+            display: none;
+        }
+
+        #update-user-profile {
+            top: 220px;
+        }
+
+        #update-user-profile p.heading span {
+            margin-left: 40px;
+        }
+    }
 </style>
 
 
@@ -98,9 +146,10 @@
 </div>
 <div class="menu">
     <a href="#">Personal Info</a>
-    <a onclick="showOrderContainer()" href="#">Orders</a>
-    <a onclick="showOrderContainer('orderhistory-container')" href="#">Order History</a>
-    <a href="#">Store list</a>
+    <a onclick="showOrderContainer()" href="#">Orders {{#ifGt orders.length
+        0}} <span>{{orders.length}}</span> {{/ifGt}}</a>
+    <a onclick="showOrderContainer('orderhistory-container')" href="#">Order History {{#ifGt ordersHistory.length
+        0}}<span>{{ordersHistory.length}}</span>{{/ifGt}}</a>
 </div>
 <form id="update-user-profile" action="" class="" method="post">
     <p class="heading">Personal Information <span onclick="showEditForm(event)">Edit</span></p>
@@ -269,6 +318,93 @@
         top: 70%;
         font-size: 0.8rem;
     }
+
+    @media screen and (max-width:600px) {
+        .container .orders .order-content .each-order {
+            width: 83%;
+            min-height: 120px;
+        }
+
+        .each-order p {
+            left: 53% !important;
+            width: none;
+        }
+
+        .each-order p.orderId {
+            top: -5px !important;
+            left: 43% !important;
+            font-size: 0.5rem !important;
+            font-weight: 550 !important;
+        }
+
+        .each-order p.store {
+            top: 20px !important;
+        }
+
+        .each-order p.order-total {
+            top: 70px !important;
+        }
+
+        .each-order p.date {
+            top: 50px !important;
+            font-size: 0.6rem !important;
+            font-weight: 550 !important;
+            left: 50% !important;
+        }
+
+        .each-order p.Titems {
+            top: 73px !important;
+            left: 70% !important;
+            display: inline !important;
+            width: 25% !important;
+        }
+
+        .each-order p.track {
+            width: 40% !important;
+            top: 100px;
+        }
+
+        .container i {
+            top: 16px;
+            left: 75%;
+
+        }
+
+        i.fa-comments {
+            color: rgb(15, 1, 1);
+            left: 92%;
+            top: 110px;
+            font-size: 0.8rem;
+        }
+
+        .each-order {
+            padding-top: 20px !important;
+        }
+
+        .order-content .each-order span.itemTotal {
+            left: 37.5%;
+            font-weight: 550;
+            font-size: 0.6rem;
+
+        }
+
+        .order-content .each-order span.qnt {
+            left: 31.5%;
+            font-weight: 550;
+            font-size: 0.6rem;
+        }
+
+        .order-content .each-order span.name {
+            margin-left: -10px !important;
+            font-weight: 550;
+            font-size: 0.6rem;
+        }
+
+        .orders {
+            height: 120% !important;
+        }
+
+    }
 </style>
 <div id="order-container" class="container">
     <div class="orders">
@@ -288,7 +424,8 @@
                          color: white;
                         " onclick="showStatus('O',{{@index}})">?</span></p>
                 {{#each this.cartItems}}
-                {{this.name}} <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹ {{X this.qnt
+                <span class="name">{{this.name}}</span> <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹
+                    {{X this.qnt
                     this.price}}</span><br>
                 {{/each}}
             </div>
@@ -320,7 +457,8 @@
                          color: white;
                         " onclick="showStatus('H',{{@index}})">?</span></p>
                 {{#each this.cartItems}}
-                {{this.name}} <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹ {{X this.qnt
+                <span class="name">{{this.name}}</span> <span class="qnt">{{this.qnt}}</span> <span class="itemTotal"> ₹
+                    {{X this.qnt
                     this.price}}</span><br>
                 {{/each}}
             </div>

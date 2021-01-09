@@ -1,4 +1,96 @@
 <div id="snackbar">Some text some message..</div>
+<style>
+    @media screen and (max-width:600px) {
+
+        .left-side,
+        .right-side {
+            position: fixed !important;
+            height: 100vh !important;
+            z-index: 2;
+            top: 0 !important;
+        }
+
+        .right-side {
+            overflow-y: scroll;
+            max-height: 90vh;
+        }
+
+        .order {
+            min-height: 200px !important;
+            position: relative !important;
+            width: 97% !important;
+        }
+
+        .order>* {
+            position: absolute !important;
+            font-size: 0.7rem !important;
+            font-weight: 550;
+        }
+
+        .order .user {
+            left: 5px !important;
+            top: 45% !important;
+        }
+
+        .order .time {
+            left: 5px !important;
+            font-size: 0.55rem !important;
+            font-weight: 700 !important;
+        }
+
+        .order .address {
+            top: 55% !important;
+            left: 5px !important;
+            max-width: 30px !important;
+            font-weight: 700 !important;
+            font-size: 0.55rem !important;
+        }
+
+        .order .status {
+            left: 5px !important;
+            top: 25% !important;
+        }
+
+        .order .mop {
+            background-color: rgb(252, 167, 164);
+            left: 60%;
+            padding: auto 1px !important;
+            top: 6%;
+            font-size: 0.55rem !important;
+            font-weight: 700 !important;
+        }
+
+        .order .total {
+            left: 55% !important;
+            top: 50% !important;
+            font-weight: 700 !important;
+        }
+
+        .order .view {
+            left: 75% !important;
+            top: 36% !important;
+            font-size: 0.55rem !important;
+            font-weight: 700 !important;
+        }
+
+        .history .order .status {
+            width: 60% !important;
+            left: 5px !important;
+            margin-left: 0 !important;
+            top: 35% !important;
+        }
+
+        .history .order .feedback {
+            left: 5% !important;
+            top: 20% !important;
+        }
+
+        .history .order .status>* {
+            display: inline !important;
+            margin-left: 0 !important;
+        }
+    }
+</style>
 {{!------------- -----------left side of page with all links ---------------------- --}}
 <div class="left-side">
     <p class="store "><i style="color: rgb(40, 129, 253);" class="fas fa-store"></i> {{dealer.store}} </p>
@@ -10,9 +102,6 @@
     <p onclick="ShowTab(event,'products-tab','tab','tablink')" class="products tablink"><i
             class="fas fa-cloud-meatball"></i> Products
     </p>
-    <p onclick="ShowTab(event,'user-tab','tab','tablink')" class="users tablink"><i class="fas fa-user-friends"></i>
-        Users</p>
-    <p class="feedback tablink"><i class="far fa-comments"></i> Complaints</p>
     <p onclick="ShowTab(event,'settings-tab','tab','tablink')" class="settings tablink"><i class="fas fa-cog"></i>
         Settings</p>
     <p class="left-link"> <a style="color: rgb(228, 224, 224);text-decoration: none;" href="/dealer/logout"><i
@@ -27,6 +116,7 @@
             {{#if allOrders}}
             {{#each allOrders}}
             <div id="order-div-id{{this._id}}" class="order">
+                <div class="Loader"></div>
                 <div class="user">{{this.user.name}} </div>
                 <div class="address">
                     <i class="fas fa-map-marker-alt"></i> {{this.user.address}} , ph:{{this.user.phone}}
@@ -37,7 +127,8 @@
                 </div>
                 <div class="time order-generatedTime">{{this.date}} </div>
                 <div class="status">
-                    <select id="{{this._id}}" onchange="changeOrderStatus(event)" name="status">
+                    <select id="{{this._id}}" onchange="changeOrderStatus(event,'order-div-id{{this._id}}')"
+                        name="status">
                         {{#ifEq this.status 'pending'}}
                         <option selected value="{{this.status}}">{{this.status}}</option>
                         {{else}}
@@ -73,8 +164,8 @@
                 </div>
                 <div onclick="showOrderDetails({{@index}})" class="view">View details</div>
                 <div class="total">
-                    <p class="cost">Total cost <span>₹ {{this.cartTotal}}</span></p>
-                    <p class="item">Total item <span>{{this.TotalItem}}</span></p>
+                    <p class="cost">Total cost<span>₹ {{this.cartTotal}}</span></p>
+                    <p class="item">Total item<span>{{this.TotalItem}}</span></p>
                 </div>
             </div>
             {{/each}}
@@ -129,7 +220,79 @@
         </div>
     </div>
     {{!-- ------------------------------------- --}}
+    <style>
+        @media screen and (max-width:600px) {
+            #products-tab p.heading span {
+                margin-left: 10px;
+                font-size: 0.6rem;
+                font-weight: 700;
+            }
 
+            .products-tab .products .headings>* {
+                margin-left: 0 !important;
+                font-size: 0.6rem !important;
+                font-weight: 700;
+            }
+
+            .products-tab .products p.name {
+                left: 21% !important;
+                max-width: 20px !important;
+            }
+
+            .products-tab .products p.catogory {
+                left: 48% !important;
+            }
+
+            .products-tab .products p.price {
+                left: 73% !important;
+            }
+
+            .products-tab .products p.stock {
+                left: 87% !important;
+            }
+
+            .product img {
+                width: 40px !important;
+                margin-top: 20px !important;
+            }
+
+            .products-tab .products .headings {
+                width: 75% !important;
+                left: 26% !important;
+            }
+
+            #products-tab p.action {
+                position: absolute !important;
+                left: 20px !important;
+                top: 65%;
+            }
+
+            p.action button {
+                font-size: 0.7rem !important;
+            }
+
+            .tttt {
+                display: none;
+            }
+
+            #edit-products,
+            #edit-stock {
+                left: 10px !important;
+                width: 80% !important;
+            }
+
+            #edit-products img {
+                left: 65% !important;
+            }
+
+            #edit-products input[name='img'] {
+                left: 65% !important;
+            }
+        }
+
+
+        }
+    </style>
     {{!-- ________________section for listing products______________ --}}
     <div id="products-tab" class="tab products-tab">
         <p class="heading"><i class="fas fa-cloud-meatball"></i> Products
@@ -138,8 +301,6 @@
                 products</span>
             <span class="prod-links" onclick="ShowTab(event,'section-addproduct','product-section','prod-links')">Add
                 products</span>
-            <span>Edit products</span>
-            <span>Stocks</span>
         </p>
         <div class="products">
             <section class="product-section" id="section-all-product">
@@ -148,15 +309,16 @@
                     <p class="catogory">Catogory</p>
                     <p class="price">Price</p>
                     <p class="stock">Stock</p>
-                    <p style="margin-left: 70px;" class="action">Actions</p>
+                    <p style="margin-left: 70px;" class="action tttt">Actions</p>
                 </div>
                 {{#each dealer.products}}
                 <div id="{{this._id}}" class="product">
+                    <div class="Loader"></div>
                     <img src="/images/products/{{this.prodImage}}" alt="">
                     <p class="name">{{this.name}} </p>
                     <p class="catogory">{{this.catogory}}</p>
                     <p class="price">{{this.price}} </p>
-                    <p class="stock">{{this.stock}} <span>{{this.unit}}</span> </p>
+                    <p class="stock">{{round this.stock}} <span>{{this.unit}}</span> </p>
                     <p class="action">
                         {{#if this.status}}
                         <button data-id="{{this._id}}" data-index="{{@index}}" onclick="changeStatus(event,'false')"
@@ -176,7 +338,8 @@
             <section style="display: none;" class="product-section" id="section-addproduct">
                 <form action="" id="addproduct" enctype="multipart/form-data" autocomplete="off" method="post">
                     <p class="form-title">Add product</p>
-                    <input type="file" name='img' accept="image/*" required placeholder="add image">
+                    <input onchange="showimage(event)" type="file" name='img' accept="image/*" required
+                        placeholder="add image">
                     <input type="text" name="name" placeholder="Name">
                     <input id="firstInput" list="catogories" name="catogory" placeholder="Catogory">
                     <datalist id="catogories">
@@ -193,17 +356,6 @@
                     </select>
                     <input type="submit" value="add Item">
                 </form>
-                <form id="addProductsbycatogory" autocomplete="off" id="add-products-form" action="" method="post">
-                    <p class="form-title">Add products by catogory</p>
-                    <input type="number" min="1" placeholder="No of product" name="noofproducts">
-                    <input id='secondinput' list="catogories" name="catogory" placeholder="Catogory">
-                    <select name="unit" required>
-                        <option value="" selected disabled>select unit</option>
-                        <option value="kg">kg</option>
-                        <option value="no">no</option>
-                    </select>
-                    <input type="submit" value="submit">
-                </form>
                 <div id="sugessiondiv" class="sugessiondiv">
 
                 </div>
@@ -211,45 +363,105 @@
         </div>
     </div>
 
-    {{!-- ___________Section ______ for _________custom_____user --}}
-    <div id="user-tab" style="background-color: rgb(203, 236, 250);" class="tab user-tab ">
-        <p class="heading"><i class="fas fa-user-friends"></i> Custom Users</p>
-        <div class="headings">
-            <p class="name">Name</p>
-            <p class="address">Address</p>
-            <p class="no-of-orders">No Of Order</p>
-            <p class="action">Remove User</p>
-        </div>
-        <div style="background-color: rgb(203, 236, 250);" class="user">
-            <div class="each-user">
-                <p class="name">Mohammed shahul <br>
-                    <span style="color: blue;">9605020766</span>
-                </p>
-                <p class="address">aghghaga jhaghagha gahgha j, hh87676 pin</p>
-                <p class="no-of-orders">10 <span style="font-size: 0.8rem;">no</span></p>
-                <i class="close far fa-times-circle"></i>
-            </div>
-            <div class="each-user">
-                <p class="name">Mohammed shahul <br>
-                    <span style="color: blue;">9605020766</span>
-                </p>
-                <p class="address">aghghaga jhaghagha gahgha j, hh87676 pin</p>
-                <p class="no-of-orders">10 <span style="font-size: 0.8rem;">no</span></p>
-                <i class="close far fa-times-circle"></i>
-            </div>
-        </div>
-
-    </div>
     {{!-- _____________________________________________________________________ --}}
     {{!-- __________________section for settings_____________________ --}}
+    <style>
+        @media screen and (max-width:600px) {
+
+            #settings-tab .update-time,
+            #shop-status,
+            #settings-tab .personal-info {
+                position: absolute !important;
+                left: 10px !important;
+                width: 260px !important;
+            }
+
+            #settings-tab .update-time {
+                left: -20px !important;
+                padding: 35px 5px !important;
+                font-size: 0.65rem !important;
+            }
+
+            .update-time input {
+                width: 70px !important;
+            }
+
+            .update-time span {
+                margin-left: 5px;
+            }
+
+
+            #shop-status {
+                top: 250px !important;
+                padding: 5px !important;
+            }
+
+            #settings-tab .personal-info {
+                left: -10px !important;
+                top: 350px !important;
+                width: 95% !important;
+            }
+
+            #edit-dealer-info {
+                margin-top: 80px !important;
+                margin-left: 0 !important;
+            }
+
+            #edit-dealer-info input,
+            #edit-dealer-info textarea {
+                font-size: 0.6rem;
+                width: 40%;
+                margin: 5px !important;
+            }
+
+            #edit-dealer-info input[type='submit'] {
+                left: 20%;
+                top: 80%;
+            }
+
+            .personal-info i.fa-user-edit {
+                left: 55%;
+            }
+
+            .changePaswword {
+                position: fixed;
+                z-index: 2;
+                left: 15%;
+                top: 15px;
+                font-size: 0.7rem;
+                font-weight: 700;
+            }
+
+            .personal-info input.change-pic {
+                width: 45px !important;
+                font-size: 0.4rem !important;
+                font-weight: 550;
+                padding: 0 !important;
+                text-align: center;
+                top: 80px;
+            }
+
+            #personalinfo-pro {
+                width: 50px !important;
+                height: 50px !important;
+                left: 80%;
+                top: 10%;
+            }
+
+            #edit-dealer-info .form-heading {
+                position: absolute;
+                top: 5px;
+            }
+        }
+    </style>
     <div id="settings-tab" class="tab settings-tab">
         <p class="heading"><i class="fas fa-cog"></i> Settings <span onclick="changePassword()"
                 class="changePaswword">Change Password</span></p>
         <form action="" class="update-time">
             <span>Open Time</span>
             <span>Closing Time</span><br>
-            <input readonly value="{{dealer.open}}" type="text" id="openTime">
-            <input readonly value="{{dealer.close}}" type="text" id="closeTime">
+            <input readonly onclick="showUpdateTime()" value="{{dealer.open}}" type="text" id="openTime">
+            <input readonly onclick="showUpdateTime()" value="{{dealer.close}}" type="text" id="closeTime">
             <input type="submit" onclick="showUpdateTime(event)" value="Update">
         </form>
         <form class="form" action="" method="post" id="update-time">
@@ -307,7 +519,89 @@
     </div>
 </div>
 {{!-- --------------------------------- section order deatails--------------------------- --}}
+<style>
+    @media screen and (max-width:600px) {
+        .order-info {
+            width: 100% !important;
+            left: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        .order-info .ordered-items {
+            width: 90% !important;
+
+            max-height: 46vh;
+        }
+
+        .order-info .each-item>* {
+            font-size: 0.6rem !important;
+            font-weight: 700 !important;
+            width: 13%;
+            text-align: center;
+        }
+
+        .order-info div.heading p {
+            font-size: 0.65rem !important;
+            margin-left: 4px;
+        }
+
+        .order-info div.total {
+            width: 40%;
+            left: 20px !important;
+            top: 72vh !important;
+        }
+
+        .order-info button {
+            left: 60% !important;
+            top: 77vh !important;
+            font-size: 0.8rem !important;
+            padding: 4px !important;
+            width: 28% !important;
+        }
+
+        .order-info .fa-map-marker-alt {
+            left: 4% !important;
+            top: 71% !important;
+        }
+
+        .order-info .close {
+            left: 85% !important;
+        }
+
+        .order-info div.address {
+            left: 10% !important;
+            max-width: 40%;
+            font-size: 0.7rem !important;
+            top: 68% !important;
+        }
+
+        .order-info div.mop {
+            top: 70% !important;
+            left: 60% !important;
+        }
+
+        #history-totalsection p span {
+            margin-left: 20px !important;
+            text-align: center;
+        }
+
+        #history-totalsection {
+            padding-left: 0 !important;
+        }
+
+        .order-info div.status {
+            left: 59% !important;
+            width: 39% !important;
+        }
+
+        .order-info div.status>* {
+            width: 100% !important;
+
+        }
+    }
+</style>
 <div id="order-details" class="order-details">
+
 
 </div>
 
@@ -346,6 +640,11 @@
         class="far fa-times-circle"></i>
 </form>
 <script>
+    function showimage(e) {
+        let img = document.createElement('img')
+        img.src = URL.createObjectURL(e.target.files[0])
+        document.getElementById('addproduct').append(img)
+    }
     let allOrderHistory = JSON.parse('{{{json allOrdersHistory}}}')
     let allOrderHistTime = document.getElementById('ordershistory-tab').querySelectorAll('.order-generatedTime')
     allOrderHistTime.forEach(time => {
@@ -394,8 +693,9 @@
         })
         DetailsDiv.style.visibility = 'visible'
     }
-    function changeOrderStatus(e) {
-        showLoading()
+
+    async function changeOrderStatus(e, divId) {
+        showLoder(divId)
         $.ajax({
             url: '/dealer/changeOrderStatus',
             method: 'post',
@@ -404,7 +704,7 @@
                 status: e.target.value
             },
             success: (res => {
-                hideLoading()
+                hideLoder(divId)
                 if (res.err) alert('sorry some Error occured')
                 else {
                     if (e.target.value == 'rejected' || e.target.value == 'delivered') {

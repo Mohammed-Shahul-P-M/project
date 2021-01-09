@@ -30,6 +30,12 @@ const hbs = exhbs.create({
         },
         json: function (obj) {
             return JSON.stringify(obj)
+        },
+        ifGt: function (key, value, options) {
+            return (key > value) ? options.fn(this) : options.inverse(this)
+        },
+        round: function (value) {
+            return value.toFixed(2)
         }
     }
 })

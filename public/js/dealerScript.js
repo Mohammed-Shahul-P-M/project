@@ -89,13 +89,13 @@ function updateCatogory(data) {
 function changeStatus(e, value) {
     let id = e.target.getAttribute('data-id')
     let index = e.target.getAttribute('data-index')
-    showLoading()
+    showLoder(id)
     $.ajax({
         url: '/dealer/disable',
         method: 'post',
         data: { id: id, status: value, index: index },
         success: (result => {
-            hideLoading()
+            hideLoder(id)
             checkAuth(result)
             if (value == 'true') {
                 e.target.innerText = 'Disable'
@@ -307,8 +307,17 @@ $('#edit-stock').submit(e => {
 })
 // function to show edit form for update time 
 function showUpdateTime(e) {
-    e.preventDefault()
-    document.getElementById('update-time').style.visibility = 'visible'
+    if (e) e.preventDefault()
+    let openTime = document.getElementById('openTime').value.split(':')
+    let closeTime = document.getElementById('closeTime').value.split(':')
+    let reqForm = document.getElementById('update-time')
+    let hours = reqForm.querySelectorAll('input[name="hr"]')
+    let minuts = reqForm.querySelectorAll('input[name="mn"]')
+    minuts[0].value = openTime[1]
+    minuts[1].value = closeTime[1]
+    hours[0].value = openTime[0]
+    hours[1].value = closeTime[0]
+    reqForm.style.visibility = 'visible'
 }
 // function to update time 
 $('#update-time').submit(e => {

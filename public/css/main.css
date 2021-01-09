@@ -210,3 +210,77 @@ form.form input{
           transform: rotate(360deg);
       }
   }
+/* css for simple loading animation */
+.simpleLoader {
+  position: absolute;
+  font-size: 0.4rem !important;
+  background-color: white;
+  text-align: center;
+  width: 170px;
+  border-radius: 4px;
+  border: 2px solid red;
+  margin-top: -130px;
+}
+
+.simpleLoader p {
+  font-size: 0.8rem;
+}
+
+.simpleLoader p span:after {
+  content: '...';
+  animation: dots 1s steps(5, end) infinite;
+}
+
+@keyframes dots {
+
+  0%,
+  20% {
+      color: rgba(0, 0, 0, 0);
+      text-shadow:
+          .25em 0 0 rgba(0, 0, 0, 0),
+          .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  40% {
+      color: white;
+      text-shadow:
+          .25em 0 0 rgba(0, 0, 0, 0),
+          .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  60% {
+      text-shadow:
+          .25em 0 0 white,
+          .5em 0 0 rgba(0, 0, 0, 0);
+  }
+
+  80%,
+  100% {
+      text-shadow:
+          .25em 0 0 white,
+          .5em 0 0 white;
+  }
+}
+.Loader {
+  border: 3px solid #76b0ac;
+  /* Light grey */
+  border-top: 3px solid #05141e;
+  /* Blue */
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+
+  100% {
+      transform: rotate(360deg);
+  }
+}
+input,button,select{
+  cursor: pointer;
+}

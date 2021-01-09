@@ -163,7 +163,7 @@ module.exports = {
     // function to get all orders from databse 
     getAllOrders: (id) => {
         return new Promise(async (resolve, reject) => {
-            const allOrders = await db.get().collection(ORDERS_COLLECTION).find({ storeId: ObjectId(id) }).toArray()
+            const allOrders = await db.get().collection(ORDERS_COLLECTION).find({ storeId: `${id}` }).toArray()
             if (allOrders && allOrders.length > 0) resolve(allOrders)
             else resolve(null)
         })
@@ -171,7 +171,7 @@ module.exports = {
     // function to get all order history 
     getAllOrdersHistory: (id) => {
         return new Promise(async (resolve, reject) => {
-            const allOrdersHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find({ storeId: ObjectId(id) }).toArray()
+            const allOrdersHistory = await db.get().collection(ORDERhISTORY_COLLECTION).find({ storeId: `${id}` }).toArray()
             if (allOrdersHistory && allOrdersHistory.length > 0) resolve(allOrdersHistory)
             else resolve(null)
         })
@@ -234,7 +234,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let COLLECTION = ORDERS_COLLECTION
             if (location == 'oh') COLLECTION = ORDERhISTORY_COLLECTION
-            let data = await db.get().collection(COLLECTION).findOne({ _id: ObjectId(orderId), storeId: ObjectId(storeId) })
+            let data = await db.get().collection(COLLECTION).findOne({ _id: ObjectId(orderId), storeId: `${storeId}` })
             if (data) resolve(data)
             else resolve(null)
         })

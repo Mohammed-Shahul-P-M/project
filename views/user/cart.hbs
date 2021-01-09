@@ -29,6 +29,8 @@
         background-color: white;
     }
 
+
+
     ::-webkit-scrollbar {
         display: none;
     }
@@ -147,7 +149,7 @@
 
     input[type=radio]:checked+label>img {
         border: 1px solid #fff;
-        box-shadow: 0 0 1px 1px #090;
+        box-shadow: 0 0 2px 2px #090;
 
     }
 
@@ -218,15 +220,59 @@
 
     .fnbtn:nth-child(1) {
         color: blue;
-        left: 70%;
+        left: 68%;
     }
 
     .fnbtn:nth-child(2) {
         color: red;
-        left: 85%;
+        left: 82%;
+    }
+
+    @media screen and (max-width:600px) {
+
+        .left-section,
+        .right-section {
+            width: 95%;
+        }
+
+        .right-section {
+            max-height: 300px;
+        }
+
+        .right-section .c-add,
+        .payment {
+            width: 40% !important;
+            display: inline-block;
+            margin-top: 0 !important;
+        }
+
+        .grandtoTal p span {
+            margin-left: 100px !important;
+        }
+
+        .payment {
+            padding-bottom: 15px !important;
+        }
+
+        span.message {
+            position: absolute;
+            font-size: 0.6rem;
+        }
+
+        .eachOrder p.total {
+            left: 83%;
+        }
+
+        .eachOrder img {
+            width: 50px;
+            margin-top: 20px;
+        }
+
+        .eachOrder p.close {
+            left: 88%;
+        }
     }
 </style>
-<p class="Topic">Cart</p>
 {{#if cartItems}}
 {{#each cartItems}}
 {{#if this.banned}}
@@ -241,18 +287,18 @@
             <img src="/images/products/{{this.prodImage}}" alt="{{this.name}}">
             <p class="name">{{this.name}}</p>
             <p class="action">
-                <span style="background-color: darkred;" onclick="addQnt('{{@index}}','{{@../index}}','-')"
+                <span style="background-color: darkred;" onclick="addQnt('{{@index}}','{{@../index}}','-',event)"
                     class="btn btn1">-</span>
                 <input type="number" disabled oninput="checkValue(event,this.value)" id="{{@../index}}{{@index}}id"
                     onchange="changeQnt(event,'{{@../index}}/{{@index}}',)" {{#ifEq this.unit 'kg' }}
                     value="{{X this.qnt 1000}}" {{else}} value="{{this.qnt}}" {{/ifEq}} {{#ifEq this.unit 'kg'
                     }}min="100" step="50" {{else}} min="1" step="1" {{/ifEq}}>
-                <span style="background-color: green;" onclick="addQnt('{{@index}}','{{@../index}}','+')"
+                <span style="background-color: green;" onclick="addQnt('{{@index}}','{{@../index}}','+',event)"
                     class="btn">+</span>
                 {{#ifEq this.unit 'kg'}} <span class="message">(in grams)</span>
                 {{/ifEq}}
             </p>
-            <p style="font-weight: 550;" id="{{@../index}}/{{@index}}idTotal" class="total">₹ {{X this.price this.qnt}}
+            <p style="font-weight: 550;" id="{{@../index}}/{{@index}}idTotal" class="total">₹{{X this.price this.qnt}}
             </p>
             <p class="close" onclick="removeItem({{@../index}},{{@index}},'{{this._id}}')">X</p>
         </div>
@@ -264,19 +310,14 @@
             <p class="grandTotal">Total Cost <span id="{{@index}}cartTotal">₹ {{this.cartTotal}}</span></p>
             <p class="totalItem">Total Items <span id="{{@index}}totalItem">{{this.TotalItem}}</span></p>
         </div>
-        <div class="right-child">
+        <div class="right-child c-add">
             <i class="fas fa-street-view"></i>
-            <p class="address"> {{../userData.address}} </p>
+            <p class="address"> {{../userData.address}}</p>
         </div>
         <div class="right-child payment">
             <p>Mode of payment</p>
-            <input class="input-hidden" onclick='mop="paypal"' type="radio" value="paypal" checked required
-                name="mop{{@index}}" id="pypal{{@index}}">
-            <label for="pypal{{@index}}">
-                <img style="width: 40px; height: 40px;" src="/images/paypal.png" alt="pay pal">
-            </label>
-            <input class="input-hidden" onclick='mop="rzpay"' type="radio" value="rzpay" required name="mop{{@index}}"
-                id="rzpay{{@index}}">
+            <input class="input-hidden" onclick='mop="rzpay"' checked type="radio" value="rzpay" required
+                name="mop{{@index}}" id="rzpay{{@index}}">
             <label for="rzpay{{@index}}">
                 <img style="width: 40px; height: 40px;" src="/images/razorpay.png" alt="razor pay">
             </label>
@@ -292,18 +333,40 @@
 {{/if}}
 {{/each}}
 {{else }}
-sorry cart is empty
+<div class="embty" style="text-align: center; margin-top: 200px;">
+    <p class="heading"> Your cart is embty</p>
+    <button onclick="location.replace('/')">Shop now</button>
+</div>
 {{/if}}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    function changeQnt(e, id) {
+    let MouseX;
+    let MouseY;
+    function printMousePos(event) {
+        MouseX = event.clientX
+        MouseY = event.clientY
+    }
+
+    document.addEventListener("click", printMousePos);
+
+    function showSimpleLoder(x, y, msg, uniqClass) {
+        let loder = document.createElement('div')
+        loder.setAttribute('style', `left:${x - 110}px;top:${y + 60}px;z-index:2;`)
+        loder.classList = `simpleLoader cl${uniqClass}`
+        loder.innerHTML = `<p>${msg} <span>.</span></p>`
+        document.querySelector('body').append(loder)
+    }
+    function hidSimpleLoading(className) {
+        document.querySelector(`.cl${className}`).remove()
+    }
+    async function changeQnt(e, id) {
+
         if (e.target.value == '') {
             e.target.value = e.target.min
         }
         let qnt = parseInt(e.target.value)
         var inputStepvalue = document.getElementById(e.target.id).step;
         if (inputStepvalue == 50 && qnt % 50 != 0) qnt = (parseInt(qnt / 50) + 1) * 50
-        showLoading()
         $.ajax({
             url: '/cart/changeQnt',
             method: 'post',
@@ -312,7 +375,6 @@ sorry cart is empty
                 qnt: qnt
             },
             success: (res => {
-                hideLoading()
                 checkLogin(res)
                 if (res.err) alert('sorry can not change quantity please try again later')
                 else {
@@ -325,12 +387,13 @@ sorry cart is empty
 
     }
 
-    function addQnt(prodId, storeId, opt) {
+    async function addQnt(prodId, storeId, opt, e) {
+        printMousePos(e)
         let reqInput = document.getElementById(`${storeId}${prodId}id`)
         let inputStepvalue = parseInt(reqInput.step)
         let inputValue = parseInt(reqInput.value)
-        function chageqnt(id, qnt) {
-            showLoading()
+
+        async function chageqnt(id, qnt, className) {
             $.ajax({
                 url: '/cart/changeQnt',
                 method: 'post',
@@ -339,22 +402,28 @@ sorry cart is empty
                     qnt: qnt
                 },
                 success: (res => {
-                    hideLoading()
+                    hidSimpleLoading(className)
                     checkLogin(res)
                     if (res.err) alert('sorry error ? please check value or reload page ')
-                    else reqInput.value = qnt
-                    document.getElementById(storeId + '/' + prodId + 'idTotal').innerText = `₹ ${res.newCost}`
-                    document.getElementById(storeId + 'cartTotal').innerText = `₹ ${res.cartTotal}`
+                    else {
+                        reqInput.value = qnt
+                        document.getElementById(storeId + '/' + prodId + 'idTotal').innerText = `₹ ${res.newCost}`
+                        document.getElementById(storeId + 'cartTotal').innerText = `₹ ${res.cartTotal}`
+                    }
                 })
 
             })
         }
         if (inputStepvalue == 1 && inputValue > 1 && opt == '-' || opt == '-' && inputStepvalue == 50 && inputValue > 100) {
             let newQnt = inputValue - inputStepvalue
-            chageqnt(`${storeId}/${prodId}`, newQnt)
+            let cTime = Date.now()
+            showSimpleLoder(MouseX, MouseY, 'changing qnt', cTime)
+            chageqnt(`${storeId}/${prodId}`, newQnt, cTime)
         } else if (opt == '+') {
             let newQnt = inputValue + inputStepvalue
-            chageqnt(`${storeId}/${prodId}`, newQnt)
+            let cTime = Date.now()
+            showSimpleLoder(MouseX, MouseY, 'changing qnt', cTime)
+            chageqnt(`${storeId}/${prodId}`, newQnt, cTime)
         }
 
     }
@@ -363,7 +432,6 @@ sorry cart is empty
     }
     // function to remove one item from the cart 
     function removeItem(n, m, id) {
-        showLoading()
         $.ajax({
             url: '/cart/remove',
             method: 'post',
@@ -372,7 +440,6 @@ sorry cart is empty
                 n: n
             },
             success: (res => {
-                hideLoading()
                 checkLogin(res)
                 if (res.totalItem == 0) location.reload()
                 if (res.err) alert('sorry some error occured please try again later')
@@ -395,8 +462,8 @@ sorry cart is empty
     }
     function deleteOrder(id) {
         let r = confirm('are you sure to want delete ?')
-        showLoading()
         if (r) {
+            showLoading()
             $.ajax({
                 url: '/cart/removeStore',
                 method: 'post',
@@ -411,7 +478,7 @@ sorry cart is empty
         }
     }
     // function to place order
-    let mop = 'paypal'
+    let mop = 'rzpay'
     function placeOrder(id) {
         showLoading()
         $.ajax({
@@ -474,4 +541,6 @@ sorry cart is empty
             })
         })
     }
+
+
 </script>

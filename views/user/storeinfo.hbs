@@ -6,9 +6,9 @@
 
 
     .storinfo {
-        background-color: #e9d7bf;
+        background-color: #bfd9e9;
         width: 20%;
-        min-height: 70vh;
+        height: 300px;
         min-width: 220px;
         padding: 15px;
         position: fixed;
@@ -18,6 +18,7 @@
         border-radius: 3px;
         box-shadow: 0 0 1px 1px rgb(23, 100, 1);
     }
+
 
     .storinfo p.location {
         font-weight: 550;
@@ -63,6 +64,91 @@
         padding-top: 0;
     }
 
+
+    @media screen and (max-width:600px) {
+
+        .storinfo {
+            position: fixed;
+            top: 18%;
+            left: 0;
+            width: 98%;
+            padding: 0;
+            margin-left: 1%;
+            height: 160px;
+            padding-top: 30px;
+            visibility: hidden;
+        }
+
+        .storinfo>* {
+            position: absolute;
+            width: 45%;
+        }
+
+        .storinfo p.location {
+            top: 70px;
+        }
+
+        .storinfo p.address {
+            left: 50%;
+            top: 45px;
+        }
+
+        .storinfo .btn {
+            top: 100px;
+            width: 37%;
+            margin: 5%;
+        }
+
+        .storinfo .closeBtn {
+            left: 48%;
+        }
+
+        .storinfo .btn span {
+            margin-left: 10% !important;
+        }
+
+        p.closeButton {
+            position: absolute;
+            display: block !important;
+            top: 0;
+            left: 70%;
+            font-weight: 700;
+        }
+
+        .storeDetails {
+            visibility: visible !important;
+            position: fixed;
+            left: 10px;
+            top: 120px;
+        }
+
+        .products {
+            width: 100%;
+            left: 0;
+        }
+
+        .products .card {
+            width: 120px !important;
+            min-height: 170px !important;
+        }
+
+        .products .card img {
+            width: 100px !important;
+            height: 70px !important;
+        }
+
+        select {
+            left: 60% !important;
+            top: 120px !important;
+        }
+
+        .simpleLoader {
+            width: 150px !important;
+            border: 1px solid red !important;
+            margin-left: -15px;
+        }
+    }
+
     .products .card {
         width: 170px;
         min-height: 200px;
@@ -72,8 +158,9 @@
 
     .products p.heading {
         text-align: left;
-        background-color: rgb(189, 192, 194);
-        padding: 3px 5px;
+        background-color: rgb(255, 187, 182);
+        padding: 3px 20px;
+        font-size: 0.8rem;
     }
 
     .products .card img {
@@ -86,22 +173,48 @@
     .products .card p.price,
     .products .card button {
         display: inline-block;
-        margin: 10px;
+        margin: 7px;
+        font-size: 0.8rem;
+    }
+
+    p.closeButton {
+        display: none;
+    }
+
+    .storeDetails {
+        visibility: hidden;
+    }
+
+    select {
+        position: fixed;
+        left: 80%;
+        top: 80px;
+        padding: 2px 10px 2px 0;
+        border-radius: 5px;
+        outline: none;
     }
 </style>
-
+<i onclick="document.querySelector('.storinfo').style.visibility='visible'" class="fas fa-store-alt storeDetails"></i>
+<select onchange="location.replace('#'+this.value)">
+    <option value="#">Go to catogory</option>
+    {{#each store.products}}
+    <option value="{{this.name}}"><a href="#{{this.name}}">{{this.name}}</a></option>
+    {{/each}}
+</select>
 <div class="storinfo">
+    <p class="closeButton" onclick="document.querySelector('.storinfo').style.visibility='hidden'">X</p>
     <p class="heading"><i style="color: #0a0ac1;" class="fas fa-store-alt"></i> {{store.store}}</p>
     <p class="location">{{store.location}}</p>
     <p class="address">{{store.address}}</p>
-    <p class="opentime">Open <span style="color: rgb(14, 50, 157);">{{store.open}}</span></p>
-    <p class="opentime">Close <span style="color: red;">{{store.close}}</span></p>
+    <p class="opentime btn">Open <span style="color: rgb(14, 50, 157);">{{store.open}}</span></p>
+    <p class="opentime btn closeBtn">Close <span style="color: red;">{{store.close}}</span></p>
 </div>
 <div class="products">
     {{#each store.products}}
-    <p class="heading">{{this.name}}</p>
+    <p id="{{this.name}}" class="heading">{{this.name}}</p>
     {{#each this.products}}
-    <div class="card">
+    <div id="card{{this._id}}" class="card">
+
         <img src="/images/products/{{this.prodImage}}" alt="{{this.name}}">
         <p class="topic">{{this.name}}</p>
         {{#ifEq this.stock '0'}}
@@ -114,8 +227,18 @@
     {{/each}}
     {{/each}}
 </div>
+
 <script>
+    function showSimpleLoder(id) {
+        let card = document.getElementById('card' + id)
+        let loder = document.createElement('div')
+        loder.classList = 'simpleLoader'
+        loder.innerHTML = `<p>Adding to cart <span>.</span></p>`
+        card.append(loder)
+    }
     function addTocart(id) {
+        let card = document.getElementById('card' + id)
+        showSimpleLoder(id)
         $.ajax({
             url: '/addTocart',
             method: 'post',
@@ -125,11 +248,20 @@
             success: (result => {
                 if (result.loginErr) {
                     let x = confirm('you are not logged in want to in ?')
+                    card.querySelector('.simpleLoader').innerHTML = `<p style="color:red">Sorry faild </p>`
                     if (x) location.replace('/login')
                 }
-                if (result.err) alert(result.err)
-                else showSnackbar('added to cart')
+                else if (result.err) alert(result.err)
+                //else showSnackbar('added to cart')
+                else {
+                    document.getElementById('cartCount').style.visibility = 'visible'
+                    let cartCount = parseInt(document.getElementById('cartCount').innerText)
+                    document.getElementById('cartCount').innerText = cartCount + 1
+                    card.querySelector('.simpleLoader').innerHTML = `<p style="color:green;font-weight:550">Added to cart </p>`
+                }
             })
         })
+
+
     }
 </script>

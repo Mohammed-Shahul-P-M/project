@@ -155,10 +155,10 @@ module.exports = {
         })
     },
     // function to remove all product from a cart 
-    removeAllFromCart: (id) => {
+    removeAllFromCart: (id, userId) => {
         return new Promise((resolve, reject) => {
             db.get().collection(USER_COLLECTION).findOneAndUpdate(
-                { 'cart.storeId': `${id}` },
+                { _id: ObjectId(userId), 'cart.storeId': `${id}` },
                 { $set: { 'cart.$.products': [] } },
                 { returnOriginal: false }
             ).then(res => resolve(res.value))

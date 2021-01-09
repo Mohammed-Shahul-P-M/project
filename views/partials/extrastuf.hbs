@@ -93,7 +93,7 @@
 
     #dropDownmenu {
         width: 250px;
-        position: absolute;
+        position: fixed;
         z-index: 1;
         background-color: rgb(8, 81, 81);
         text-align: center;
@@ -155,7 +155,7 @@
     <i class="fas fa-user nav-user" onclick="document.getElementById('dropDownmenu').style.display='block'">
         <span>account</span></i>
     <a href="/cart"><i class="fas fa-shopping-cart nav-cart"> <span>cart</span></i></a>
-    <span id="cartCount">0</span>
+    <span onclick="location.replace('/cart')" id="cartCount">0</span>
 </nav>
 <div id="snackbar">Some text some message..</div>
 

@@ -26,6 +26,19 @@
 </head>
 
 <body>
+    <script>
+        function showLoder(id) {
+            document.getElementById(id).querySelector('.Loader').style.visibility = 'visible'
+        }
+        function hideLoder(id) {
+            document.getElementById(id).querySelector('.Loader').style.visibility = 'hidden'
+        }
+        function sleep() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => resolve('slept'), 5000)
+            })
+        }
+    </script>
     {{#if user}}
     {{> extrastuf}}
     {{else }}
