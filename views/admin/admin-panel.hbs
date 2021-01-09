@@ -1,11 +1,33 @@
 <div id="snackbar">Some text some message..</div>
+<style>
+    .atb {
+        position: absolute !important;
+    }
+
+    .atb1 {
+        top: 7% !important;
+    }
+
+    .atb2 {
+        top: 30% !important;
+    }
+
+    .atb3 {
+        top: 50% !important;
+    }
+
+    .atb4 {
+        top: 70% !important;
+    }
+</style>
 {{!-- ---------------------------- left side links-------------------------------- --}}
-<p class="left-link"><i style="color: rgb(20, 20, 250);" class="fas fa-bars"></i>
+<p class="left-link atb atb1"><i style="color: rgb(20, 20, 250);" class="fas fa-bars"></i>
     <i>Dashboard Kit</i>
 </p>
-<p onclick="showDiv('dealer-details');refreshHome();" class="left-link"><i class="fas fa-users"></i> Dealers</p>
-<p onclick="showDiv('settings')" class="left-link"><i class="fas fa-cog"></i> Settings</p>
-<p class="left-link"> <a style="color: white;text-decoration: none;" href="/admin/logout"><i
+<p onclick="showDiv('dealer-details');refreshHome();" class="left-link atb atb2"><i class="fas fa-users"></i> Dealers
+</p>
+<p onclick="showDiv('settings')" class="left-link atb atb3"><i class="fas fa-cog "></i> Settings</p>
+<p class="left-link atb atb4"> <a style="color: white;text-decoration: none;" href="/admin/logout"><i
             class="fas fa-sign-out-alt"></i> logout</a>
     {{!-- -----------------------------home page display dealer details---------------------------------------- --}}
 <div class="dealers-overview">
