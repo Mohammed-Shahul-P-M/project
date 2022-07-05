@@ -1,5 +1,7 @@
 const db = require('../../config/connection')
 const ADMIN_COLLECTION = 'admin'
+const DEALER_COLLECTION = 'dealers'
+const USER_COLLECTION = 'users'
 const bcrypt = require('bcrypt')
 
 
@@ -50,5 +52,45 @@ module.exports = {
                 resolve(response)
             })
         })
+    },
+
+    resetCredentials: async () => {
+        try {
+
+            const password = await bcrypt.hash('shahul', 10)
+
+            await db.get().collection(ADMIN_COLLECTION).findOneAndUpdate(
+                { _id: objectId('5fc254ee191ed61fc413de22') },
+                {
+                    $set: {
+                        name: 'shahul',
+                        password
+                    }
+                }
+            )
+            await db.get().collection(DEALER_COLLECTION).findOneAndUpdate(
+                { _id: objectId('5fef699bc90bf600041c0c31') },
+                {
+                    $set: {
+                        email: 'shahul',
+                        password
+                    }
+                }
+            )
+
+            await db.get().collection(USER_COLLECTION).findOneAndUpdate(
+                { _id: objectId('5fef5194fa7fd9000411dd32') },
+                {
+                    $set: {
+                        phone: 'shahul',
+                        password
+                    }
+                }
+            )
+            return Promise.resolve(true)
+        } catch (error) {
+            console.log(error)
+            return Promise.reject(error)
+        }
     }
 }

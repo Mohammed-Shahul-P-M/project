@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
                 req.session.name = admin.name
                 res.redirect(requsted_url)
             } else {
-                loginerr = 'password or name is wrong'
+                loginerr = 'password or name is wrong '
                 res.redirect('/admin',)
             }
         })
@@ -164,4 +164,18 @@ router.post('/deletedealer', veryfyAdmin, (req, res) => {
     dealerDbfunction.deleteDealer(req.body.id).then(response => res.json(response))
         .catch(err => res.json({ status: 'delete faild' }))
 })
+
+
+// resetting password 
+router.get('/reset-credential', async (req, res) => {
+    try {
+        await adminDbFunction.resetCredentials()
+        res.status(200).json({ message: 'Credentials reset success' })
+    } catch (error) {
+        res.status(500).json({
+            message: 'Internal server Error'
+        })
+    }
+})
+
 module.exports = router
